@@ -1,36 +1,172 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home/Home";
+import Services from "./pages/Services/Services";
+import ServiceDetails from "./pages/Services/ServiceDetails";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import ErrorPage from "./pages/ErrorPage";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Profile from "./pages/Dashboard/User/Profile";
+import MyBookings from "./pages/Dashboard/User/MyBookings";
+import PaymentHistory from "./pages/Dashboard/User/PaymentHistory";
+import ManageServices from "./pages/Dashboard/Admin/ManageServices";
+import ManageDecorators from "./pages/Dashboard/Admin/ManageDecorators";
+import ManageBookings from "./pages/Dashboard/Admin/ManageBookings";
+import AssignDecorator from "./pages/Dashboard/Admin/AssignDecorator";
+import Analytics from "./pages/Dashboard/Admin/Analytics";
+import MyProjects from "./pages/Dashboard/Decorator/MyProjects";
+import TodaySchedule from "./pages/Dashboard/Decorator/TodaySchedule";
+import UpdateStatus from "./pages/Dashboard/Decorator/UpdateStatus";
+import Earnings from "./pages/Dashboard/Decorator/Earnings";
+import PrivateRoute from "./routes/PrivateRoute";
+import AdminRoute from "./routes/AdminRoute";
+import DecoratorRoute from "./routes/DecoratorRoute";
 
-function App() {
-  const [count, setCount] = useState(0)
+const router = createBrowserRouter([
+  // ─── Public Routes ───────────────────────────────────
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/services",
+    element: <Services />,
+  },
+  {
+    path: "/services/:id",
+    element: <ServiceDetails />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+  // ─── Dashboard (Private) ─────────────────────────────
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
+    children: [
+      // User Routes
+      {
+        path: "user/profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "user/bookings",
+        element: (
+          <PrivateRoute>
+            <MyBookings />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "user/payment-history",
+        element: (
+          <PrivateRoute>
+            <PaymentHistory />
+          </PrivateRoute>
+        ),
+      },
 
-export default App
+      // Admin Routes
+      {
+        path: "admin/manage-services",
+        element: (
+          <AdminRoute>
+            <ManageServices />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/manage-decorators",
+        element: (
+          <AdminRoute>
+            <ManageDecorators />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/manage-bookings",
+        element: (
+          <AdminRoute>
+            <ManageBookings />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/assign-decorator",
+        element: (
+          <AdminRoute>
+            <AssignDecorator />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin/analytics",
+        element: (
+          <AdminRoute>
+            <Analytics />
+          </AdminRoute>
+        ),
+      },
 
+      // Decorator Routes
+      {
+        path: "decorator/projects",
+        element: (
+          <DecoratorRoute>
+            <MyProjects />
+          </DecoratorRoute>
+        ),
+      },
+      {
+        path: "decorator/schedule",
+        element: (
+          <DecoratorRoute>
+            <TodaySchedule />
+          </DecoratorRoute>
+        ),
+      },
+      {
+        path: "decorator/update-status",
+        element: (
+          <DecoratorRoute>
+            <UpdateStatus />
+          </DecoratorRoute>
+        ),
+      },
+      {
+        path: "decorator/earnings",
+        element: (
+          <DecoratorRoute>
+            <Earnings />
+          </DecoratorRoute>
+        ),
+      },
+    ],
+  },
+
+  // ─── 404 Error Page ──────────────────────────────────
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
+]);
+
+const App = () => {
+  return <RouterProvider router={router} />;
+};
+
+export default App;
