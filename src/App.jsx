@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MainLayout from "./components/Layout/MainLayout";
 import Home from "./pages/Home/Home";
 import Services from "./pages/Services/Services";
 import ServiceDetails from "./pages/Services/ServiceDetails";
@@ -23,29 +24,20 @@ import AdminRoute from "./routes/AdminRoute";
 import DecoratorRoute from "./routes/DecoratorRoute";
 
 const router = createBrowserRouter([
-  // ─── Public Routes ───────────────────────────────────
+
+  // ─── Public Routes (with Navbar + Footer) ────────────
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/services",
-    element: <Services />,
-  },
-  {
-    path: "/services/:id",
-    element: <ServiceDetails />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
+    element: <MainLayout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/services", element: <Services /> },
+      { path: "/services/:id", element: <ServiceDetails /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+    ],
   },
 
-  // ─── Dashboard (Private) ─────────────────────────────
+  // ─── Dashboard (Private, no Footer) ──────────────────
   {
     path: "/dashboard",
     element: (
@@ -54,119 +46,25 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      // User Routes
-      {
-        path: "user/profile",
-        element: (
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "user/bookings",
-        element: (
-          <PrivateRoute>
-            <MyBookings />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "user/payment-history",
-        element: (
-          <PrivateRoute>
-            <PaymentHistory />
-          </PrivateRoute>
-        ),
-      },
-
-      // Admin Routes
-      {
-        path: "admin/manage-services",
-        element: (
-          <AdminRoute>
-            <ManageServices />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin/manage-decorators",
-        element: (
-          <AdminRoute>
-            <ManageDecorators />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin/manage-bookings",
-        element: (
-          <AdminRoute>
-            <ManageBookings />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin/assign-decorator",
-        element: (
-          <AdminRoute>
-            <AssignDecorator />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin/analytics",
-        element: (
-          <AdminRoute>
-            <Analytics />
-          </AdminRoute>
-        ),
-      },
-
-      // Decorator Routes
-      {
-        path: "decorator/projects",
-        element: (
-          <DecoratorRoute>
-            <MyProjects />
-          </DecoratorRoute>
-        ),
-      },
-      {
-        path: "decorator/schedule",
-        element: (
-          <DecoratorRoute>
-            <TodaySchedule />
-          </DecoratorRoute>
-        ),
-      },
-      {
-        path: "decorator/update-status",
-        element: (
-          <DecoratorRoute>
-            <UpdateStatus />
-          </DecoratorRoute>
-        ),
-      },
-      {
-        path: "decorator/earnings",
-        element: (
-          <DecoratorRoute>
-            <Earnings />
-          </DecoratorRoute>
-        ),
-      },
+      { path: "user/profile", element: <PrivateRoute><Profile /></PrivateRoute> },
+      { path: "user/bookings", element: <PrivateRoute><MyBookings /></PrivateRoute> },
+      { path: "user/payment-history", element: <PrivateRoute><PaymentHistory /></PrivateRoute> },
+      { path: "admin/manage-services", element: <AdminRoute><ManageServices /></AdminRoute> },
+      { path: "admin/manage-decorators", element: <AdminRoute><ManageDecorators /></AdminRoute> },
+      { path: "admin/manage-bookings", element: <AdminRoute><ManageBookings /></AdminRoute> },
+      { path: "admin/assign-decorator", element: <AdminRoute><AssignDecorator /></AdminRoute> },
+      { path: "admin/analytics", element: <AdminRoute><Analytics /></AdminRoute> },
+      { path: "decorator/projects", element: <DecoratorRoute><MyProjects /></DecoratorRoute> },
+      { path: "decorator/schedule", element: <DecoratorRoute><TodaySchedule /></DecoratorRoute> },
+      { path: "decorator/update-status", element: <DecoratorRoute><UpdateStatus /></DecoratorRoute> },
+      { path: "decorator/earnings", element: <DecoratorRoute><Earnings /></DecoratorRoute> },
     ],
   },
 
-  // ─── 404 Error Page ──────────────────────────────────
-  {
-    path: "*",
-    element: <ErrorPage />,
-  },
+  // ─── 404 ─────────────────────────────────────────────
+  { path: "*", element: <ErrorPage /> },
 ]);
 
-const App = () => {
-  return <RouterProvider router={router} />;
-};
+const App = () => <RouterProvider router={router} />;
 
 export default App;
