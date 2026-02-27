@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
 import useAuth from "../../hooks/useAuth"
 import axios from "axios"
@@ -10,7 +10,8 @@ import { HiEye, HiEyeOff, HiArrowRight } from "react-icons/hi"
 const Register = () => {
   const { register, googleLogin, updateUserProfile } = useAuth()
   const navigate = useNavigate()
-
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/"
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const Register = () => {
       await saveUserToDB(email, name, photoURL)
 
       toast.success("Account created successfully! 🎉")
-      navigate("/")
+      navigate(from, { replace: true })
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         toast.error("Email already in use!")
@@ -71,12 +72,17 @@ const Register = () => {
       const result = await googleLogin()
       const { email, displayName, photoURL } = result.user
 
-      // Save to MongoDB (if already exists it just returns existing user)
-      await saveUserToDB(email, displayName, photoURL)
+      // Save to DB separately
+      try {
+        await saveUserToDB(email, displayName, photoURL)
+      } catch (dbError) {
+        console.error("DB save error:", dbError)
+      }
 
       toast.success("Welcome to StyleDecor! 🎉")
-      navigate("/")
+      navigate(from, { replace: true })
     } catch (error) {
+      console.error(error)
       toast.error("Google login failed!")
     } finally {
       setLoading(false)
