@@ -49,3 +49,27 @@ h1, h2, h3, h4, h5, h6 {
   background: #0D9488;
   border-radius: 10px;
 }
+
+/* ── Swiper Hero Pagination ── */
+.hero-swiper .swiper-pagination {
+  bottom: 2rem !important;
+  right: 2rem !important;
+  left: auto !important;
+  width: auto !important;
+  display: flex;
+  gap: 6px;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  width: 24px;
+  background: #0D9488;
+}
