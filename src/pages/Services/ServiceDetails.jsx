@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
+import useAxiosSecure from "../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import useAuth from "../../hooks/useAuth"
 import { HiLocationMarker, HiCalendar, HiX, HiArrowRight } from "react-icons/hi"
@@ -20,6 +21,7 @@ const ServiceDetails = () => {
   const { id } = useParams()
   const { user } = useAuth()
   const navigate = useNavigate()
+  const axiosSecure = useAxiosSecure()
 
   const [service, setService] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -30,11 +32,13 @@ const ServiceDetails = () => {
     location: "",
   })
 
-  // Fetch service details
+  // ── Fetch service (public route → regular axios) ──────
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/services/${id}`)
+        const res = await axios.get(
+          `http://localhost:5000/services/${id}`
+        )
         setService(res.data)
       } catch (error) {
         toast.error("Service not found!")
@@ -55,11 +59,12 @@ const ServiceDetails = () => {
     setModalOpen(true)
   }
 
+  // ── Create booking (private route → axiosSecure) ──────
   const handleBookingSubmit = async (e) => {
     e.preventDefault()
     setBookingLoading(true)
     try {
-      await axios.post("http://localhost:5000/bookings", {
+      await axiosSecure.post("/bookings", {
         serviceId: service._id,
         serviceName: service.service_name,
         serviceImage: service.image,
@@ -73,7 +78,8 @@ const ServiceDetails = () => {
       setModalOpen(false)
       setFormData({ bookingDate: "", location: "" })
     } catch (error) {
-      toast.error("Booking failed. Try again!")
+      console.error("Booking error:", error.response?.data || error.message)
+      toast.error(error.response?.data?.message || "Booking failed!")
     } finally {
       setBookingLoading(false)
     }
@@ -123,7 +129,6 @@ const ServiceDetails = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="lg:col-span-2 flex flex-col gap-6"
             >
-              {/* Title */}
               <div>
                 <h1 className="font-heading text-3xl sm:text-4xl font-bold text-base-content mb-3">
                   {service.service_name}
@@ -138,7 +143,6 @@ const ServiceDetails = () => {
                 </div>
               </div>
 
-              {/* Description */}
               <div className="glass-card p-6">
                 <h3 className="font-heading font-semibold text-lg text-base-content mb-3">
                   About This Service
@@ -148,7 +152,6 @@ const ServiceDetails = () => {
                 </p>
               </div>
 
-              {/* What's included */}
               <div className="glass-card p-6">
                 <h3 className="font-heading font-semibold text-lg text-base-content mb-4">
                   What's Included
@@ -174,7 +177,6 @@ const ServiceDetails = () => {
                 </div>
               </div>
 
-              {/* Service Steps */}
               <div className="glass-card p-6">
                 <h3 className="font-heading font-semibold text-lg text-base-content mb-4">
                   Project Status Flow
@@ -223,7 +225,6 @@ const ServiceDetails = () => {
                   </div>
                 </div>
 
-                {/* Quick info */}
                 <div className="flex flex-col gap-3 mb-6 pb-6 border-b border-base-300">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -260,7 +261,6 @@ const ServiceDetails = () => {
                   </div>
                 </div>
 
-                {/* Book Button */}
                 <button
                   onClick={handleBookNow}
                   className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300"
@@ -288,7 +288,6 @@ const ServiceDetails = () => {
       <AnimatePresence>
         {modalOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -296,8 +295,6 @@ const ServiceDetails = () => {
               onClick={() => setModalOpen(false)}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
             />
-
-            {/* Modal */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -306,8 +303,6 @@ const ServiceDetails = () => {
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
               <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
-
-                {/* Close button */}
                 <button
                   onClick={() => setModalOpen(false)}
                   className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-base-200 flex items-center justify-center text-base-content/50 hover:text-base-content hover:bg-base-300 transition-colors"
@@ -315,7 +310,6 @@ const ServiceDetails = () => {
                   <HiX size={16} />
                 </button>
 
-                {/* Modal Header */}
                 <div className="mb-6">
                   <h2 className="font-heading text-2xl font-bold text-base-content">
                     Confirm Booking
@@ -325,7 +319,6 @@ const ServiceDetails = () => {
                   </p>
                 </div>
 
-                {/* Service Summary */}
                 <div className="flex items-center gap-3 p-4 rounded-2xl bg-base-200 mb-6">
                   <img
                     src={service.image}
@@ -345,10 +338,7 @@ const ServiceDetails = () => {
                   </div>
                 </div>
 
-                {/* Booking Form */}
                 <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
-
-                  {/* User info (pre-filled, read only) */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Your Name
@@ -373,7 +363,6 @@ const ServiceDetails = () => {
                     />
                   </div>
 
-                  {/* Booking Date */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       <HiCalendar className="inline mr-1" size={14} />
@@ -391,7 +380,6 @@ const ServiceDetails = () => {
                     />
                   </div>
 
-                  {/* Location */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       <HiLocationMarker className="inline mr-1" size={14} />
@@ -409,7 +397,6 @@ const ServiceDetails = () => {
                     />
                   </div>
 
-                  {/* Submit */}
                   <button
                     type="submit"
                     disabled={bookingLoading}
