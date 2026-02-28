@@ -70,6 +70,15 @@ const AssignDecorator = () => {
       }
     }
   }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </div>
+    )
+  }
+  
   return (
     <div>
       {/* Header */}

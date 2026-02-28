@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import { HiCalendar, HiLocationMarker } from "react-icons/hi"
 
+const COMMISSION = 0.30
+
 const Earnings = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchEarnings = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/bookings")
+        const res = await axiosSecure.get("/bookings")
         const mine = res.data.filter(
           (b) => b.assignedDecorator === user?.email
         )

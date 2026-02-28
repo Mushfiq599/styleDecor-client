@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import useAuth from "../../../hooks/useAuth"
 import { HiCalendar, HiLocationMarker, HiUser } from "react-icons/hi"
@@ -33,14 +33,14 @@ const nextStatus = {
 
 const MyProjects = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(null)
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/bookings")
-      // Filter bookings assigned to this decorator
+      const res = await axiosSecure.get("/bookings")
       const myProjects = res.data.filter(
         (b) => b.assignedDecorator === user?.email
       )
@@ -59,11 +59,10 @@ const MyProjects = () => {
   const handleStatusUpdate = async (bookingId, currentStatus) => {
     const next = nextStatus[currentStatus]
     if (!next) return
-
     setUpdating(bookingId)
     try {
-      await axios.patch(
-        `http://localhost:5000/bookings/status/${bookingId}`,
+      await axiosSecure.patch(
+        `/bookings/status/${bookingId}`,
         { status: next }
       )
       toast.success(`Status updated to ${statusLabels[next]}!`)

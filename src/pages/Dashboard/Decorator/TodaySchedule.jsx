@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import { HiLocationMarker, HiClock, HiUser } from "react-icons/hi"
 
 const TodaySchedule = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [todayProjects, setTodayProjects] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/bookings")
+        const res = await axiosSecure.get("/bookings")
         const today = new Date().toISOString().split("T")[0]
         const myToday = res.data.filter(
           (b) =>
@@ -131,8 +132,8 @@ const TodaySchedule = () => {
                 </div>
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-body font-medium flex-shrink-0 ${project.status === "setup_in_progress"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-orange-500/10 text-orange-500"
+                ? "bg-primary/10 text-primary"
+                : "bg-orange-500/10 text-orange-500"
                 }`}>
                 {project.status.replace(/_/g, " ")}
               </span>

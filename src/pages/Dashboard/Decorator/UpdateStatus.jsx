@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import useAuth from "../../../hooks/useAuth"
 
@@ -15,13 +15,14 @@ const statusFlow = [
 
 const UpdateStatus = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(null)
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/bookings")
+      const res = await axiosSecure.get("/bookings")
       const mine = res.data.filter(
         (b) =>
           b.assignedDecorator === user?.email &&
@@ -43,8 +44,8 @@ const UpdateStatus = () => {
   const handleStatusUpdate = async (bookingId, newStatus) => {
     setUpdating(bookingId)
     try {
-      await axios.patch(
-        `http://localhost:5000/bookings/status/${bookingId}`,
+      await axiosSecure.patch(
+        `/bookings/status/${bookingId}`,
         { status: newStatus }
       )
       toast.success("Status updated successfully!")
@@ -156,12 +157,12 @@ const UpdateStatus = () => {
                         }
                         disabled={!isNext || updating === project._id}
                         className={`p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-200 ${isPast
-                            ? "bg-primary/10 text-primary cursor-default"
-                            : isCurrent
-                              ? "bg-primary text-white shadow-lg shadow-primary/20 cursor-default"
-                              : isNext
-                                ? "bg-base-200 text-base-content hover:bg-secondary hover:text-white cursor-pointer border-2 border-dashed border-secondary/50"
-                                : "bg-base-200/50 text-base-content/30 cursor-default"
+                          ? "bg-primary/10 text-primary cursor-default"
+                          : isCurrent
+                            ? "bg-primary text-white shadow-lg shadow-primary/20 cursor-default"
+                            : isNext
+                              ? "bg-base-200 text-base-content hover:bg-secondary hover:text-white cursor-pointer border-2 border-dashed border-secondary/50"
+                              : "bg-base-200/50 text-base-content/30 cursor-default"
                           }`}
                       >
                         <span className="text-xl">{step.icon}</span>
