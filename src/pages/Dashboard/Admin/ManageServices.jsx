@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import useAuth from "../../../hooks/useAuth"
@@ -21,6 +21,7 @@ const emptyForm = {
 
 const ManageServices = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -30,7 +31,7 @@ const ManageServices = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/services")
+      const res = await axiosSecure.get("/services")
       setServices(res.data)
     } catch (error) {
       toast.error("Failed to load services!")
@@ -67,15 +68,13 @@ const ManageServices = () => {
     setSaving(true)
     try {
       if (editingService) {
-        // Update
-        await axios.put(
-          `http://localhost:5000/services/${editingService._id}`,
+        await axiosSecure.put(
+          `/services/${editingService._id}`,
           { ...formData, createdByEmail: user.email }
         )
         toast.success("Service updated!")
       } else {
-        // Create
-        await axios.post("http://localhost:5000/services", {
+        await axiosSecure.post("/services", {
           ...formData,
           createdByEmail: user.email,
         })
@@ -103,7 +102,7 @@ const ManageServices = () => {
     })
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/services/${id}`)
+        await axiosSecure.delete(`/services/${id}`)
         toast.success("Service deleted!")
         fetchServices()
       } catch (error) {
