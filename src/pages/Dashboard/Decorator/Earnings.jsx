@@ -218,5 +218,4 @@ const Earnings = () => {
   )
 }
 
-const COMMISSION = 0.30
 export default Earnings

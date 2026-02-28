@@ -22,6 +22,7 @@ import Earnings from "./pages/Dashboard/Decorator/Earnings";
 import PrivateRoute from "./routes/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
 import DecoratorRoute from "./routes/DecoratorRoute";
+import Payment from "./pages/Dashboard/User/Payment"
 
 const router = createBrowserRouter([
 
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       { path: "user/profile", element: <PrivateRoute><Profile /></PrivateRoute> },
       { path: "user/bookings", element: <PrivateRoute><MyBookings /></PrivateRoute> },
       { path: "user/payment-history", element: <PrivateRoute><PaymentHistory /></PrivateRoute> },
+      { path: "user/payment/:bookingId",element: (<PrivateRoute><Payment /></PrivateRoute>),},
       { path: "admin/manage-services", element: <AdminRoute><ManageServices /></AdminRoute> },
       { path: "admin/manage-decorators", element: <AdminRoute><ManageDecorators /></AdminRoute> },
       { path: "admin/manage-bookings", element: <AdminRoute><ManageBookings /></AdminRoute> },
