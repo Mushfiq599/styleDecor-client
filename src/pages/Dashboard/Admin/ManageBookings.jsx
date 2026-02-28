@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import {
   HiCalendar, HiLocationMarker, HiSearch, HiFilter
@@ -29,6 +29,7 @@ const statusLabels = {
 }
 
 const ManageBookings = () => {
+  const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -36,7 +37,7 @@ const ManageBookings = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/bookings")
+      const res = await axiosSecure.get("/bookings")
       setBookings(res.data)
     } catch (error) {
       toast.error("Failed to load bookings!")
@@ -189,8 +190,8 @@ const ManageBookings = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-body font-medium ${booking.paymentStatus === "paid"
-                          ? "bg-green-500/10 text-green-500"
-                          : "bg-yellow-500/10 text-yellow-500"
+                        ? "bg-green-500/10 text-green-500"
+                        : "bg-yellow-500/10 text-yellow-500"
                         }`}>
                         {booking.paymentStatus === "paid" ? "✓ Paid" : "Unpaid"}
                       </span>

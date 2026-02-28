@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie,
@@ -10,6 +10,7 @@ import {
 const COLORS = ["#0D9488", "#F97316", "#6366f1", "#ec4899", "#f59e0b", "#10b981"]
 
 const Analytics = () => {
+  const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true)
@@ -18,8 +19,8 @@ const Analytics = () => {
     const fetchData = async () => {
       try {
         const [bookingsRes, servicesRes] = await Promise.all([
-          axios.get("http://localhost:5000/bookings"),
-          axios.get("http://localhost:5000/services"),
+          axiosSecure.get("/bookings"),
+          axiosSecure.get("/services"),
         ])
         setBookings(bookingsRes.data)
         setServices(servicesRes.data)

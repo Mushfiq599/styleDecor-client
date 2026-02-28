@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCheck, HiX, HiSearch } from "react-icons/hi"
 
 const ManageDecorators = () => {
+  const axiosSecure = useAxiosSecure()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/users")
+      const res = await axiosSecure.get("/users")
       setUsers(res.data)
     } catch (error) {
       toast.error("Failed to load users!")
@@ -39,7 +40,7 @@ const ManageDecorators = () => {
     })
     if (result.isConfirmed) {
       try {
-        await axios.patch(`http://localhost:5000/users/role/${email}`, {
+        await axiosSecure.patch(`/users/role/${email}`, {
           role: newRole,
         })
         toast.success(`Role updated to ${newRole}!`)
@@ -49,7 +50,6 @@ const ManageDecorators = () => {
       }
     }
   }
-
   const getRoleBadge = (role) => {
     if (role === "admin") return "bg-secondary/10 text-secondary"
     if (role === "decorator") return "bg-primary/10 text-primary"

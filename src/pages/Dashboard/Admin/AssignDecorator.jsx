@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
-import { HiUser, HiCheck } from "react-icons/hi"
+import { HiCheck } from "react-icons/hi"
 
 const AssignDecorator = () => {
+  const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [decorators, setDecorators] = useState([])
   const [loading, setLoading] = useState(true)
@@ -15,10 +16,9 @@ const AssignDecorator = () => {
   const fetchData = async () => {
     try {
       const [bookingsRes, usersRes] = await Promise.all([
-        axios.get("http://localhost:5000/bookings"),
-        axios.get("http://localhost:5000/users"),
+        axiosSecure.get("/bookings"),
+        axiosSecure.get("/users"),
       ])
-      // Only show paid bookings that are not yet assigned or completed
       const paidBookings = bookingsRes.data.filter(
         (b) =>
           b.paymentStatus === "paid" &&
@@ -57,8 +57,8 @@ const AssignDecorator = () => {
     if (result.isConfirmed) {
       setAssigning(bookingId)
       try {
-        await axios.patch(
-          `http://localhost:5000/bookings/assign/${bookingId}`,
+        await axiosSecure.patch(
+          `/bookings/assign/${bookingId}`,
           { assignedDecorator: decoratorEmail }
         )
         toast.success("Decorator assigned successfully!")
@@ -70,7 +70,6 @@ const AssignDecorator = () => {
       }
     }
   }
-
   return (
     <div>
       {/* Header */}
