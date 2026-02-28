@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import axios from "axios"
 import useAuth from "../../../hooks/useAuth"
+import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCalendar, HiLocationMarker, HiClock, HiX } from "react-icons/hi"
+import { Link } from "react-router-dom"
 
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -30,14 +31,13 @@ const statusLabels = {
 
 const MyBookings = () => {
   const { user } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/bookings/user/${user?.email}`
-      )
+      const res = await axiosSecure.get(`/bookings/user/${user?.email}`)
       setBookings(res.data)
     } catch (error) {
       toast.error("Failed to load bookings!")
@@ -51,7 +51,6 @@ const MyBookings = () => {
   }, [user])
 
   const handleCancel = async (bookingId) => {
-    // Show confirmation dialog using sweetalert2
     const result = await Swal.fire({
       title: "Cancel Booking?",
       text: "Are you sure you want to cancel this booking?",
@@ -65,15 +64,11 @@ const MyBookings = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.patch(
-          `http://localhost:5000/bookings/cancel/${bookingId}`
-        )
+        await axiosSecure.patch(`/bookings/cancel/${bookingId}`)
         toast.success("Booking cancelled!")
-        fetchBookings() // refresh list
+        fetchBookings()
       } catch (error) {
-        toast.error(
-          error.response?.data?.message || "Failed to cancel booking!"
-        )
+        toast.error(error.response?.data?.message || "Failed to cancel!")
       }
     }
   }
@@ -88,7 +83,6 @@ const MyBookings = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           My Bookings
@@ -98,7 +92,6 @@ const MyBookings = () => {
         </p>
       </div>
 
-      {/* Empty State */}
       {bookings.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -112,12 +105,12 @@ const MyBookings = () => {
           <p className="font-body text-sm text-base-content/60 mb-6">
             You haven't booked any decoration service yet.
           </p>
-          <a
-            href="/services"
+          <Link
+            to="/services"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-body font-medium text-sm rounded-xl hover:bg-primary/90 transition-all duration-300"
           >
             Browse Services
-          </a>
+          </Link>
         </motion.div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -129,14 +122,11 @@ const MyBookings = () => {
               transition={{ delay: i * 0.08 }}
               className="glass-card p-5 flex flex-col sm:flex-row gap-4"
             >
-              {/* Service Image */}
               <img
                 src={booking.serviceImage || "https://placehold.co/100x100"}
                 alt={booking.serviceName}
                 className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0"
               />
-
-              {/* Details */}
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                   <h3 className="font-heading font-semibold text-base text-base-content">
@@ -146,7 +136,6 @@ const MyBookings = () => {
                     {statusLabels[booking.status]}
                   </span>
                 </div>
-
                 <div className="flex flex-wrap gap-3 mb-3">
                   <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
                     <HiCalendar size={14} />
@@ -161,28 +150,27 @@ const MyBookings = () => {
                     {new Date(booking.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="font-heading font-bold text-lg text-primary">
                       ৳{booking.serviceCost.toLocaleString()}
                     </span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-body font-medium ${
-                      booking.paymentStatus === "paid"
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-body font-medium ${booking.paymentStatus === "paid"
                         ? "bg-green-500/10 text-green-500"
                         : "bg-yellow-500/10 text-yellow-500"
-                    }`}>
+                      }`}>
                       {booking.paymentStatus === "paid" ? "✓ Paid" : "Unpaid"}
                     </span>
                   </div>
-
-                  {/* Actions */}
                   <div className="flex items-center gap-2">
                     {booking.paymentStatus === "unpaid" &&
                       booking.status !== "cancelled" && (
-                        <button className="px-4 py-2 bg-primary text-white font-body text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors">
+                        <Link
+                          to={`/dashboard/user/payment/${booking._id}`}
+                          className="px-4 py-2 bg-primary text-white font-body text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors"
+                        >
                           Pay Now
-                        </button>
+                        </Link>
                       )}
                     {booking.status === "pending" && (
                       <button
@@ -196,7 +184,7 @@ const MyBookings = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>  
+            </motion.div>
           ))}
         </div>
       )}
