@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react"
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -7,64 +7,71 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     updateProfile,
-} from "firebase/auth";
-import { auth } from "../firebase.config";
+} from "firebase/auth"
+import { auth } from "../firebase.config"
+import axios from "axios"
 
-// Step 1: Create the context
-export const AuthContext = createContext(null);
+export const AuthContext = createContext(null)
+const googleProvider = new GoogleAuthProvider()
 
-// Step 2: Create the Google provider
-const googleProvider = new GoogleAuthProvider();
-
-// Step 3: Create the Provider component
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    // Register with email and password
     const register = (email, password) => {
-        setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
+        setLoading(true)
+        return createUserWithEmailAndPassword(auth, email, password)
+    }
 
-    // Login with email and password
     const login = (email, password) => {
-        setLoading(true);
-        return signInWithEmailAndPassword(auth, email, password);
-    };
+        setLoading(true)
+        return signInWithEmailAndPassword(auth, email, password)
+    }
 
-    // Login with Google
     const googleLogin = () => {
-        setLoading(true);
-        return signInWithPopup(auth, googleProvider);
-    };
+        setLoading(true)
+        return signInWithPopup(auth, googleProvider)
+    }
 
-    // Logout
     const logout = () => {
-        setLoading(true);
-        return signOut(auth);
-    };
+        setLoading(true)
+        // Remove token from localStorage on logout
+        localStorage.removeItem("styleDecor-token")
+        return signOut(auth)
+    }
 
-    // Update user profile (name, photo)
     const updateUserProfile = (name, photo) => {
         return updateProfile(auth.currentUser, {
             displayName: name,
             photoURL: photo,
-        });
-    };
+        })
+    }
 
-    // Step 4: Watch for login/logout state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser)
+            setLoading(false)
 
-        // Cleanup when component unmounts
-        return () => unsubscribe();
-    }, []);
+            if (currentUser?.email) {
+                // ── Request JWT token from our server ──
+                try {
+                    const res = await axios.post("http://localhost:5000/auth/jwt", {
+                        email: currentUser.email,
+                    })
+                    // Store token in localStorage
+                    localStorage.setItem("styleDecor-token", res.data.token)
+                } catch (error) {
+                    console.error("Failed to get JWT token:", error)
+                }
+            } else {
+                // User logged out — remove token
+                localStorage.removeItem("styleDecor-token")
+            }
+        })
 
-    // Step 5: All values we want to share across the app
+        return () => unsubscribe()
+    }, [])
+
     const authInfo = {
         user,
         loading,
@@ -73,13 +80,13 @@ const AuthProvider = ({ children }) => {
         googleLogin,
         logout,
         updateUserProfile,
-    };
+    }
 
     return (
         <AuthContext.Provider value={authInfo}>
             {children}
         </AuthContext.Provider>
-    );
-};
+    )
+}
 
-export default AuthProvider;
+export default AuthProvider
