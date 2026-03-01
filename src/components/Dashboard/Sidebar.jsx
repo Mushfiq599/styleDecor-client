@@ -20,7 +20,6 @@ import {
     HiCurrencyDollar,
 } from "react-icons/hi"
 
-// Nav links per role
 const userLinks = [
     { name: "My Profile", path: "/dashboard/user/profile", icon: HiUser },
     { name: "My Bookings", path: "/dashboard/user/bookings", icon: HiCalendar },
