@@ -6,6 +6,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import useAuth from "../../hooks/useAuth"
 import { HiLocationMarker, HiCalendar, HiX, HiArrowRight } from "react-icons/hi"
+import { TbCurrencyTaka } from "react-icons/tb";
+import { FaCheck } from "react-icons/fa6";
 import { HiStar } from "react-icons/hi2"
 
 const categoryColors = {
@@ -31,8 +33,7 @@ const ServiceDetails = () => {
     bookingDate: "",
     location: "",
   })
-
-  // ── Fetch service (public route → regular axios) ──────
+  
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -59,7 +60,6 @@ const ServiceDetails = () => {
     setModalOpen(true)
   }
 
-  // ── Create booking (private route → axiosSecure) ──────
   const handleBookingSubmit = async (e) => {
     e.preventDefault()
     setBookingLoading(true)
@@ -99,19 +99,15 @@ const ServiceDetails = () => {
     <>
       <div className="min-h-screen bg-base-100 pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* ── Hero Image ── */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="relative h-72 sm:h-96 rounded-3xl overflow-hidden mb-10 shadow-2xl"
-          >
+            className="relative h-72 sm:h-96 rounded-3xl overflow-hidden mb-10 shadow-2xl">
             <img
               src={service.image || "https://placehold.co/1200x400"}
               alt={service.service_name}
-              className="w-full h-full object-cover"
-            />
+              className="w-full h-full object-cover"/>
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-6 left-6">
               <span className={`px-3 py-1 rounded-full text-xs font-body font-medium capitalize ${categoryColors[service.service_category] || "bg-primary/10 text-primary"}`}>
@@ -121,14 +117,11 @@ const ServiceDetails = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            {/* ── Left — Service Info ── */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:col-span-2 flex flex-col gap-6"
-            >
+              className="lg:col-span-2 flex flex-col gap-6">
               <div>
                 <h1 className="font-heading text-3xl sm:text-4xl font-bold text-base-content mb-3">
                   {service.service_name}
@@ -151,7 +144,6 @@ const ServiceDetails = () => {
                   {service.description}
                 </p>
               </div>
-
               <div className="glass-card p-6">
                 <h3 className="font-heading font-semibold text-lg text-base-content mb-4">
                   What's Included
@@ -167,7 +159,7 @@ const ServiceDetails = () => {
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-2">
                       <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-primary text-xs">✓</span>
+                        <span className="text-primary text-xs"><FaCheck /></span>
                       </div>
                       <span className="font-body text-sm text-base-content/70">
                         {item}
@@ -195,36 +187,31 @@ const ServiceDetails = () => {
                         {step}
                       </span>
                       {i < 5 && (
-                        <HiArrowRight size={12} className="text-base-content/30" />
-                      )}
+                        <HiArrowRight size={12} className="text-base-content/30" />)}
                     </div>
                   ))}
                 </div>
               </div>
             </motion.div>
-
-            {/* ── Right — Booking Card ── */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-1"
-            >
+              className="lg:col-span-1">
               <div className="glass-card p-6 sticky top-28">
                 <div className="mb-6">
                   <p className="font-body text-sm text-base-content/60 mb-1">
                     Starting from
                   </p>
                   <div className="flex items-baseline gap-2">
-                    <span className="font-heading font-bold text-4xl text-primary">
-                      ৳{service.cost.toLocaleString()}
+                    <span className="flex items-center font-heading font-bold text-4xl text-primary">
+                      <TbCurrencyTaka size={40}/>{service.cost.toLocaleString()}
                     </span>
                     <span className="font-body text-sm text-base-content/50">
                       {service.unit}
                     </span>
                   </div>
                 </div>
-
                 <div className="flex flex-col gap-3 mb-6 pb-6 border-b border-base-300">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -250,7 +237,7 @@ const ServiceDetails = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <span className="text-green-500 text-sm">✓</span>
+                      <span className="text-green-500 text-sm"><FaCheck /></span>
                     </div>
                     <div>
                       <p className="font-body text-xs text-base-content/50">Availability</p>
@@ -260,11 +247,9 @@ const ServiceDetails = () => {
                     </div>
                   </div>
                 </div>
-
                 <button
                   onClick={handleBookNow}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300"
-                >
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300">
                   Book Now
                   <HiArrowRight size={18} />
                 </button>
@@ -276,15 +261,12 @@ const ServiceDetails = () => {
                       login
                     </a>{" "}
                     to book this service
-                  </p>
-                )}
+                  </p>)}
               </div>
             </motion.div>
           </div>
         </div>
       </div>
-
-      {/* ── Booking Modal ── */}
       <AnimatePresence>
         {modalOpen && (
           <>
@@ -293,23 +275,19 @@ const ServiceDetails = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setModalOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-            />
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"/>
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            >
+              className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-base-200 flex items-center justify-center text-base-content/50 hover:text-base-content hover:bg-base-300 transition-colors"
-                >
+                  className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-base-200 flex items-center justify-center text-base-content/50 hover:text-base-content hover:bg-base-300 transition-colors">
                   <HiX size={16} />
                 </button>
-
                 <div className="mb-6">
                   <h2 className="font-heading text-2xl font-bold text-base-content">
                     Confirm Booking
@@ -318,26 +296,23 @@ const ServiceDetails = () => {
                     Fill in the details to book this service
                   </p>
                 </div>
-
                 <div className="flex items-center gap-3 p-4 rounded-2xl bg-base-200 mb-6">
                   <img
                     src={service.image}
                     alt={service.service_name}
-                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
-                  />
+                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0"/>
                   <div className="flex-1 min-w-0">
                     <p className="font-body font-semibold text-sm text-base-content truncate">
                       {service.service_name}
                     </p>
-                    <p className="font-heading font-bold text-primary text-lg">
-                      ৳{service.cost.toLocaleString()}
+                    <p className="flex items-center font-heading font-bold text-primary text-lg">
+                      <TbCurrencyTaka size={24}/>{service.cost.toLocaleString()}
                       <span className="font-body font-normal text-xs text-base-content/50 ml-1">
                         {service.unit}
                       </span>
                     </p>
                   </div>
                 </div>
-
                 <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
@@ -347,10 +322,8 @@ const ServiceDetails = () => {
                       type="text"
                       value={user?.displayName || ""}
                       readOnly
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent outline-none font-body text-sm text-base-content/60 cursor-not-allowed"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent outline-none font-body text-sm text-base-content/60 cursor-not-allowed"/>
                   </div>
-
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Your Email
@@ -359,10 +332,8 @@ const ServiceDetails = () => {
                       type="email"
                       value={user?.email || ""}
                       readOnly
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent outline-none font-body text-sm text-base-content/60 cursor-not-allowed"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent outline-none font-body text-sm text-base-content/60 cursor-not-allowed"/>
                   </div>
-
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       <HiCalendar className="inline mr-1" size={14} />
@@ -372,14 +343,11 @@ const ServiceDetails = () => {
                       type="date"
                       value={formData.bookingDate}
                       onChange={(e) =>
-                        setFormData({ ...formData, bookingDate: e.target.value })
-                      }
+                        setFormData({ ...formData, bookingDate: e.target.value })}
                       min={new Date().toISOString().split("T")[0]}
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300"/>
                   </div>
-
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       <HiLocationMarker className="inline mr-1" size={14} />
@@ -389,19 +357,15 @@ const ServiceDetails = () => {
                       type="text"
                       value={formData.location}
                       onChange={(e) =>
-                        setFormData({ ...formData, location: e.target.value })
-                      }
+                        setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g. House 12, Road 5, Dhanmondi"
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
                   </div>
-
                   <button
                     type="submit"
                     disabled={bookingLoading}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
-                  >
+                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2">
                     {bookingLoading ? (
                       <span className="loading loading-spinner loading-sm" />
                     ) : (

@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { HiSearch, HiFilter, HiArrowRight } from "react-icons/hi"
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const categoryColors = {
   home: "bg-primary/10 text-primary",
@@ -14,7 +15,6 @@ const categoryColors = {
 }
 
 const categories = ["all", "home", "wedding", "office", "seminar", "meeting", "birthday"]
-
 const Services = () => {
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true)
@@ -40,12 +40,10 @@ const Services = () => {
       setLoading(false)
     }
   }
-
-  // Fetch on filter change
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchServices()
-    }, 400) // debounce search
+    }, 400)
     return () => clearTimeout(timer)
   }, [search, category, minCost, maxCost])
 
@@ -53,13 +51,11 @@ const Services = () => {
     <div className="min-h-screen bg-base-100 pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── Page Header ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
+          className="text-center mb-12">
           <span className="inline-block font-body text-xs font-medium text-primary tracking-widest uppercase mb-4 px-3 py-1 rounded-full bg-primary/10">
             All Services
           </span>
@@ -72,69 +68,54 @@ const Services = () => {
           </p>
         </motion.div>
 
-        {/* ── Filters ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="glass-card p-5 mb-8"
-        >
+          className="glass-card p-5 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
-
-            {/* Search */}
             <div className="relative flex-1">
               <HiSearch
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40"
-                size={18}
-              />
+                size={18}/>
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search services..."
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-              />
+                className="w-full pl-11 pr-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
             </div>
-
-            {/* Budget Range */}
             <div className="flex items-center gap-2">
               <HiFilter className="text-base-content/40 flex-shrink-0" size={18} />
               <input
                 type="number"
                 value={minCost}
                 onChange={(e) => setMinCost(e.target.value)}
-                placeholder="Min ৳"
-                className="w-28 px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-              />
+                placeholder="Min "
+                className="w-28 px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
               <span className="font-body text-sm text-base-content/40">to</span>
               <input
                 type="number"
                 value={maxCost}
                 onChange={(e) => setMaxCost(e.target.value)}
-                placeholder="Max ৳"
-                className="w-28 px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-              />
+                placeholder="Max "
+                className="w-28 px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
             </div>
           </div>
-
-          {/* Category Pills */}
           <div className="flex flex-wrap gap-2 mt-4">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={`px-4 py-1.5 rounded-full font-body text-xs font-medium capitalize transition-all duration-200 ${category === cat
-                    ? "bg-primary text-white shadow-lg shadow-primary/20"
-                    : "bg-base-200 text-base-content/60 hover:bg-base-300"
-                  }`}
-              >
+                  ? "bg-primary text-white shadow-lg shadow-primary/20"
+                  : "bg-base-200 text-base-content/60 hover:bg-base-300"
+                  }`}>
                 {cat === "all" ? "All Categories" : cat}
               </button>
             ))}
           </div>
         </motion.div>
-
-        {/* ── Results Count ── */}
         <p className="font-body text-sm text-base-content/50 mb-6">
           Showing{" "}
           <span className="font-semibold text-base-content">
@@ -142,15 +123,16 @@ const Services = () => {
           </span>{" "}
           services
         </p>
-
-        {/* ── Services Grid ── */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <span className="loading loading-spinner loading-lg text-primary" />
           </div>
         ) : services.length === 0 ? (
           <div className="text-center py-20">
-            <span className="text-6xl block mb-4">🔍</span>
+            <span className="text-6xl block mb-4"><HiSearch
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40"
+              size={18}
+            /></span>
             <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
               No services found
             </h3>
@@ -165,13 +147,11 @@ const Services = () => {
                 key={service._id}
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.07, duration: 0.5 }}
-              >
+                transition={{ delay: i * 0.07, duration: 0.5 }}>
                 <Link
                   to={`/services/${service._id}`}
                   className="group block glass-card overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500"
                 >
-                  {/* Image */}
                   <div className="relative h-52 overflow-hidden">
                     <img
                       src={service.image}
@@ -182,8 +162,6 @@ const Services = () => {
                       {service.service_category}
                     </span>
                   </div>
-
-                  {/* Content */}
                   <div className="p-5">
                     <h3 className="font-heading font-semibold text-lg text-base-content mb-2 group-hover:text-primary transition-colors duration-300">
                       {service.service_name}
@@ -193,8 +171,8 @@ const Services = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="font-heading font-bold text-xl text-primary">
-                          ৳{service.cost.toLocaleString()}
+                        <span className="flex items-center font-heading font-bold text-xl text-primary">
+                          <TbCurrencyTaka  size={24}/>{service.cost.toLocaleString()}
                         </span>
                         <span className="font-body text-xs text-base-content/50 ml-1">
                           {service.unit}

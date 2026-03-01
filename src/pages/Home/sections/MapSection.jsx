@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
-// Fix leaflet default marker icon bug in React
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -28,14 +27,11 @@ const MapSection = () => {
     return (
         <section ref={ref} className="py-24 bg-base-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-12"
-                >
+                    className="text-center mb-12">
                     <span className="inline-block font-body text-xs font-medium text-secondary tracking-widest uppercase mb-4 px-3 py-1 rounded-full bg-secondary/10">
                         Where We Serve
                     </span>
@@ -46,24 +42,19 @@ const MapSection = () => {
                         We currently serve these areas in Dhaka. More locations coming soon!
                     </p>
                 </motion.div>
-
-                {/* Map */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    className="rounded-3xl overflow-hidden shadow-2xl border border-base-300 h-[450px]"
-                >
+                    className="rounded-3xl overflow-hidden shadow-2xl border border-base-300 h-[450px]">
                     <MapContainer
                         center={[23.8103, 90.4125]}
                         zoom={12}
                         style={{ height: "100%", width: "100%" }}
-                        scrollWheelZoom={false}
-                    >
+                        scrollWheelZoom={false}>
                         <TileLayer
                             attribution='&copy; OpenStreetMap contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                         {coverageAreas.map((area) => (
                             <div key={area.name}>
                                 <Circle
@@ -74,8 +65,7 @@ const MapSection = () => {
                                         fillColor: "#0D9488",
                                         fillOpacity: 0.15,
                                         weight: 2,
-                                    }}
-                                />
+                                    }}/>
                                 <Marker position={area.position}>
                                     <Popup>
                                         <div className="font-body">
@@ -89,7 +79,6 @@ const MapSection = () => {
                         ))}
                     </MapContainer>
                 </motion.div>
-
             </div>
         </section>
     )
