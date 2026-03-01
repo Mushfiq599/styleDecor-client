@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { loadStripe } from "@stripe/stripe-js"
+import { SlCalender } from "react-icons/sl";
+import { IoLocationSharp } from "react-icons/io5";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { FcLock } from "react-icons/fc";
 import {
     Elements,
     CardElement,
@@ -12,10 +16,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 
-// Load stripe outside component to avoid recreating on every render
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
-
-// ── Card Element Styles ───────────────────────────────────
 const cardElementOptions = {
     style: {
         base: {
@@ -32,7 +33,6 @@ const cardElementOptions = {
     },
 }
 
-// ── Inner Payment Form Component ──────────────────────────
 const CheckoutForm = ({ booking }) => {
     const stripe = useStripe()
     const elements = useElements()
@@ -44,7 +44,6 @@ const CheckoutForm = ({ booking }) => {
     const [processing, setProcessing] = useState(false)
     const [cardError, setCardError] = useState("")
 
-    // Get payment intent from server
     useEffect(() => {
         const getClientSecret = async () => {
             try {
@@ -62,16 +61,12 @@ const CheckoutForm = ({ booking }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
         if (!stripe || !elements || !clientSecret) return
-
         setProcessing(true)
         setCardError("")
 
         const card = elements.getElement(CardElement)
-
         try {
-            // Confirm payment with Stripe
             const { error, paymentIntent } = await stripe.confirmCardPayment(
                 clientSecret,
                 {
@@ -92,13 +87,12 @@ const CheckoutForm = ({ booking }) => {
             }
 
             if (paymentIntent.status === "succeeded") {
-                // Save payment confirmation to our server
                 await axiosSecure.post("/payments/confirm", {
                     bookingId: booking._id,
                     transactionId: paymentIntent.id,
                 })
 
-                toast.success("Payment successful! 🎉")
+                toast.success("Payment successful! ")
                 navigate("/dashboard/user/bookings")
             }
         } catch (error) {
@@ -109,8 +103,6 @@ const CheckoutForm = ({ booking }) => {
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-
-            {/* Card Input */}
             <div>
                 <label className="font-body text-sm font-medium text-base-content mb-2 block">
                     Card Details
@@ -118,18 +110,15 @@ const CheckoutForm = ({ booking }) => {
                 <div className="px-4 py-4 rounded-xl bg-base-200 border-2 border-transparent focus-within:border-primary transition-all duration-300">
                     <CardElement options={cardElementOptions} />
                 </div>
-                {/* Card Error */}
                 {cardError && (
                     <p className="font-body text-xs text-red-500 mt-2">
                         {cardError}
                     </p>
                 )}
             </div>
-
-            {/* Test Card Info */}
             <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
                 <p className="font-body text-xs font-semibold text-primary mb-2">
-                    🧪 Test Card Details
+                Test Card Details
                 </p>
                 <p className="font-body text-xs text-base-content/60">
                     Card Number: <span className="font-semibold text-base-content">4242 4242 4242 4242</span>
@@ -141,13 +130,10 @@ const CheckoutForm = ({ booking }) => {
                     CVC: <span className="font-semibold text-base-content">Any 3 digits</span>
                 </p>
             </div>
-
-            {/* Pay Button */}
             <button
                 type="submit"
                 disabled={!stripe || !clientSecret || processing}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed">
                 {processing ? (
                     <>
                         <span className="loading loading-spinner loading-sm" />
@@ -155,16 +141,14 @@ const CheckoutForm = ({ booking }) => {
                     </>
                 ) : (
                     <>
-                        🔒 Pay ৳{booking?.serviceCost?.toLocaleString()}
+                        <FcLock size={18}/> Pay {booking?.serviceCost?.toLocaleString()}
                     </>
                 )}
             </button>
-
         </form>
     )
 }
 
-// ── Main Payment Page Component ───────────────────────────
 const Payment = () => {
     const { bookingId } = useParams()
     const axiosSecure = useAxiosSecure()
@@ -200,9 +184,7 @@ const Payment = () => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                {/* Header */}
+                transition={{ duration: 0.5 }}>
                 <div className="mb-6">
                     <h2 className="font-heading text-2xl font-bold text-base-content">
                         Complete Payment
@@ -211,8 +193,6 @@ const Payment = () => {
                         Secure payment powered by Stripe
                     </p>
                 </div>
-
-                {/* Booking Summary */}
                 <div className="glass-card p-5 mb-6">
                     <h3 className="font-body text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-4">
                         Order Summary
@@ -221,14 +201,13 @@ const Payment = () => {
                         <img
                             src={booking.serviceImage || "https://placehold.co/80"}
                             alt={booking.serviceName}
-                            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-                        />
+                            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"/>
                         <div className="flex-1">
                             <p className="font-heading font-semibold text-base text-base-content">
                                 {booking.serviceName}
                             </p>
-                            <p className="font-body text-xs text-base-content/60 mt-0.5">
-                                📅 {booking.bookingDate} · 📍 {booking.location}
+                            <p className="flex gap-2 font-body text-xs text-base-content/60 mt-0.5">
+                                <SlCalender color="#0D9488"/> {booking.bookingDate} · <IoLocationSharp color="red"/> {booking.location}
                             </p>
                         </div>
                     </div>
@@ -236,13 +215,11 @@ const Payment = () => {
                         <span className="font-body text-sm text-base-content/60">
                             Total Amount
                         </span>
-                        <span className="font-heading font-bold text-2xl text-primary">
-                            ৳{booking.serviceCost?.toLocaleString()}
+                        <span className="font-heading font-bold text-2xl flex items-center text-primary">
+                            <TbCurrencyTaka />{booking.serviceCost?.toLocaleString()}
                         </span>
                     </div>
                 </div>
-
-                {/* Payment Form wrapped in Stripe Elements */}
                 <div className="glass-card p-6">
                     <h3 className="font-body text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-6">
                         Payment Details
@@ -251,12 +228,9 @@ const Payment = () => {
                         <CheckoutForm booking={booking} />
                     </Elements>
                 </div>
-
-                {/* Security Note */}
-                <p className="font-body text-xs text-center text-base-content/40 mt-4">
-                    🔒 Your payment is secured by Stripe. We never store your card details.
+                <p className="flex justify-center gap-1 font-body text-xs text-center text-base-content/40 mt-4">
+                    <FcLock size={16}/> Your payment is secured by Stripe. We never store your card details.
                 </p>
-
             </motion.div>
         </div>
     )

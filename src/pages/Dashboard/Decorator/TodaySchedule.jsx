@@ -3,6 +3,9 @@ import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import { HiLocationMarker, HiClock, HiUser } from "react-icons/hi"
+import { CgNotes } from "react-icons/cg";
+import { FaScrewdriverWrench } from "react-icons/fa6";
+import { TbTruckDelivery } from "react-icons/tb";
 
 const TodaySchedule = () => {
   const { user } = useAuth()
@@ -49,7 +52,6 @@ const TodaySchedule = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Today's Schedule
@@ -59,20 +61,18 @@ const TodaySchedule = () => {
         </p>
       </div>
 
-      {/* Summary Card */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
-          { label: "Today's Jobs", value: todayProjects.length, icon: "📋", color: "text-primary" },
-          { label: "In Progress", value: todayProjects.filter(p => p.status === "setup_in_progress").length, icon: "🔧", color: "text-orange-500" },
-          { label: "On The Way", value: todayProjects.filter(p => p.status === "on_the_way").length, icon: "🚗", color: "text-blue-500" },
+          { label: "Today's Jobs", value: todayProjects.length, icon: <CgNotes />, color: "text-primary" },
+          { label: "In Progress", value: todayProjects.filter(p => p.status === "setup_in_progress").length, icon: <FaScrewdriverWrench />, color: "text-orange-500" },
+          { label: "On The Way", value: todayProjects.filter(p => p.status === "on_the_way").length, icon: <TbTruckDelivery />, color: "text-blue-500" },
         ].map((stat) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card p-5 text-center"
-          >
-            <span className="text-3xl block mb-2">{stat.icon}</span>
+            className="glass-card p-5 text-center">
+            <span className="text-3xl flex justify-center text-primary mb-2">{stat.icon}</span>
             <p className={`font-heading font-bold text-2xl ${stat.color}`}>
               {stat.value}
             </p>
@@ -87,9 +87,7 @@ const TodaySchedule = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-12 text-center"
-        >
-          <span className="text-6xl block mb-4">🎉</span>
+          className="glass-card p-12 text-center">
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No jobs today!
           </h3>
@@ -105,13 +103,11 @@ const TodaySchedule = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="glass-card p-5 flex gap-4 items-center"
-            >
+              className="glass-card p-5 flex gap-4 items-center">
               <img
                 src={project.serviceImage || "https://placehold.co/80"}
                 alt={project.serviceName}
-                className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-              />
+                className="w-16 h-16 rounded-xl object-cover flex-shrink-0"/>
               <div className="flex-1">
                 <h3 className="font-heading font-semibold text-base text-base-content mb-1">
                   {project.serviceName}

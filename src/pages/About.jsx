@@ -1,12 +1,20 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { HiArrowRight } from "react-icons/hi"
+import { IoIosColorPalette } from "react-icons/io";
+import { FaStar } from "react-icons/fa";
+import { HiEmojiHappy } from "react-icons/hi";
+import { HiMiniTrophy } from "react-icons/hi2";
+import { FcIdea } from "react-icons/fc";
+import { GiBullseye } from "react-icons/gi";
+import { PiHandshake } from "react-icons/pi";
+
 
 const stats = [
-    { value: "500+", label: "Happy Clients", icon: "😊" },
-    { value: "1200+", label: "Projects Done", icon: "🏆" },
-    { value: "50+", label: "Expert Decorators", icon: "🎨" },
-    { value: "4.9★", label: "Average Rating", icon: "⭐" },
+    { value: "500+", label: "Happy Clients", icon: <HiEmojiHappy color="Orange" /> },
+    { value: "1200+", label: "Projects Done", icon: <HiMiniTrophy color="Orange"/> },
+    { value: "50+", label: "Expert Decorators", icon: <IoIosColorPalette color="Orange"/>},
+    { value: "4.9", label: "Average Rating", icon: <FaStar color="Orange"/> },
 ]
 
 const team = [
@@ -38,17 +46,17 @@ const team = [
 
 const values = [
     {
-        icon: "🎯",
+        icon: <GiBullseye color="#F97316"/>,
         title: "Precision",
         description: "Every detail matters. We execute each project with meticulous attention to detail.",
     },
     {
-        icon: "💡",
+        icon: <FcIdea />,
         title: "Creativity",
         description: "We bring fresh ideas and unique concepts to every decoration project.",
     },
     {
-        icon: "🤝",
+        icon: <PiHandshake color="#F97316"/>,
         title: "Trust",
         description: "We build lasting relationships with our clients based on honesty and reliability.",
     },
@@ -75,22 +83,15 @@ const fadeUp = {
 const About = () => {
     return (
         <div className="min-h-screen bg-base-100">
-
-            {/* ── Hero Section ── */}
             <section className="relative pt-32 pb-20 overflow-hidden">
-                {/* Background orbs */}
                 <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
                 <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-                        {/* Left */}
                         <motion.div
                             initial={{ opacity: 0, x: -40 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.7 }}
-                        >
+                            transition={{ duration: 0.7 }}>
                             <span className="inline-block font-body text-xs font-medium text-primary tracking-widest uppercase mb-4 px-3 py-1 rounded-full bg-primary/10">
                                 About Us
                             </span>
@@ -106,38 +107,33 @@ const About = () => {
                             </p>
                             <Link
                                 to="/services"
-                                className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300"
-                            >
+                                className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300">
                                 Explore Our Services
                                 <HiArrowRight size={18} />
                             </Link>
                         </motion.div>
-
-                        {/* Right — Image Grid */}
                         <motion.div
                             initial={{ opacity: 0, x: 40 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.7, delay: 0.2 }}
-                            className="grid grid-cols-2 gap-4"
-                        >
+                            className="grid grid-cols-2 gap-4">
                             {[
                                 "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&q=80",
                                 "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&q=80",
                                 "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80",
                                 "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80",
+                                "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500&q=80",
                             ].map((src, i) => (
                                 <motion.div
                                     key={i}
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 0.3 + i * 0.1 }}
-                                    className={`rounded-2xl overflow-hidden ${i === 0 ? "col-span-2 h-48" : "h-36"}`}
-                                >
+                                    className={`rounded-2xl overflow-hidden ${i === 0 ? "col-span-2 h-48" : "h-36"}`}>
                                     <img
                                         src={src}
                                         alt="decoration"
-                                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                                    />
+                                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
                                 </motion.div>
                             ))}
                         </motion.div>
@@ -145,7 +141,6 @@ const About = () => {
                 </div>
             </section>
 
-            {/* ── Stats Section ── */}
             <section className="py-16 bg-base-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -157,9 +152,8 @@ const About = () => {
                                 whileInView="visible"
                                 viewport={{ once: true }}
                                 custom={i}
-                                className="glass-card p-6 text-center"
-                            >
-                                <span className="text-4xl block mb-3">{stat.icon}</span>
+                                className="glass-card p-6 text-center items-center justify-center">
+                                <span className="text-4xl mb-3 flex justify-center">{stat.icon}</span>
                                 <p className="font-heading font-bold text-3xl text-primary mb-1">
                                     {stat.value}
                                 </p>
@@ -171,8 +165,6 @@ const About = () => {
                     </div>
                 </div>
             </section>
-
-            {/* ── Our Values ── */}
             <section className="py-24 bg-base-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
@@ -180,8 +172,7 @@ const About = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
+                        className="text-center mb-16">
                         <span className="inline-block font-body text-xs font-medium text-secondary tracking-widest uppercase mb-4 px-3 py-1 rounded-full bg-secondary/10">
                             What Drives Us
                         </span>
@@ -199,9 +190,8 @@ const About = () => {
                                 whileInView="visible"
                                 viewport={{ once: true }}
                                 custom={i}
-                                className="glass-card p-6 text-center group hover:-translate-y-2 transition-transform duration-300"
-                            >
-                                <span className="text-5xl block mb-4">{value.icon}</span>
+                                className="glass-card p-6 text-center group hover:-translate-y-2 transition-transform duration-300">
+                                <span className="text-5xl flex justify-center mb-4">{value.icon}</span>
                                 <h3 className="font-heading font-semibold text-lg text-base-content mb-2">
                                     {value.title}
                                 </h3>
@@ -213,8 +203,6 @@ const About = () => {
                     </div>
                 </div>
             </section>
-
-            {/* ── Team Section ── */}
             <section className="py-24 bg-base-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
@@ -222,8 +210,7 @@ const About = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
+                        className="text-center mb-16">
                         <span className="inline-block font-body text-xs font-medium text-primary tracking-widest uppercase mb-4 px-3 py-1 rounded-full bg-primary/10">
                             The People Behind StyleDecor
                         </span>
@@ -231,7 +218,6 @@ const About = () => {
                             Meet Our <span className="text-primary">Team</span>
                         </h2>
                     </motion.div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {team.map((member, i) => (
                             <motion.div
@@ -241,13 +227,11 @@ const About = () => {
                                 whileInView="visible"
                                 viewport={{ once: true }}
                                 custom={i}
-                                className="glass-card p-6 text-center group hover:-translate-y-2 transition-transform duration-300"
-                            >
+                                className="glass-card p-6 text-center group hover:-translate-y-2 transition-transform duration-300">
                                 <img
                                     src={member.image}
                                     alt={member.name}
-                                    className="w-20 h-20 rounded-2xl mx-auto mb-4 object-cover border-2 border-primary/20 group-hover:border-primary transition-colors duration-300"
-                                />
+                                    className="w-20 h-20 rounded-2xl mx-auto mb-4 object-cover border-2 border-primary/20 group-hover:border-primary transition-colors duration-300"/>
                                 <h3 className="font-heading font-semibold text-base text-base-content mb-1">
                                     {member.name}
                                 </h3>
@@ -262,16 +246,13 @@ const About = () => {
                     </div>
                 </div>
             </section>
-
-            {/* ── CTA Section ── */}
             <section className="py-24 bg-base-100">
                 <div className="max-w-3xl mx-auto px-4 text-center">
                     <motion.div
                         variants={fadeUp}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true }}
-                    >
+                        viewport={{ once: true }}>
                         <h2 className="font-heading text-4xl font-bold text-base-content mb-4">
                             Ready to Transform
                             <span className="text-primary"> Your Space?</span>
@@ -281,15 +262,13 @@ const About = () => {
                         </p>
                         <Link
                             to="/services"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-body font-semibold rounded-2xl hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-1 transition-all duration-300"
-                        >
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-body font-semibold rounded-2xl hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-1 transition-all duration-300">
                             Book a Service Today
                             <HiArrowRight size={18} />
                         </Link>
                     </motion.div>
                 </div>
             </section>
-
         </div>
     )
 }

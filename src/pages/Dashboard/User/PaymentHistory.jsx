@@ -4,6 +4,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 import { HiCalendar, HiLocationMarker, HiReceiptTax } from "react-icons/hi"
+import { CiCreditCard1 } from "react-icons/ci";
+import { SlCalender } from "react-icons/sl";
+import { CgNotes } from "react-icons/cg";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const PaymentHistory = () => {
   const { user } = useAuth()
@@ -41,7 +45,6 @@ const PaymentHistory = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Payment History
@@ -51,19 +54,18 @@ const PaymentHistory = () => {
         </p>
       </div>
 
-      {/* Summary Card */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
           {
             label: "Total Spent",
-            value: `৳${totalSpent.toLocaleString()}`,
-            icon: "💰",
+            value: `${totalSpent.toLocaleString()}`,
+            icon: <TbCurrencyTaka />,
             color: "text-primary",
           },
           {
             label: "Total Payments",
             value: payments.length,
-            icon: "📋",
+            icon: <CgNotes />,
             color: "text-blue-500",
           },
           {
@@ -71,7 +73,7 @@ const PaymentHistory = () => {
             value: payments[0]
               ? new Date(payments[0].createdAt).toLocaleDateString()
               : "N/A",
-            icon: "📅",
+            icon: <SlCalender />,
             color: "text-secondary",
           },
         ].map((stat) => (
@@ -79,9 +81,8 @@ const PaymentHistory = () => {
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card p-5 text-center"
-          >
-            <span className="text-3xl block mb-2">{stat.icon}</span>
+            className="glass-card p-5 text-center">
+            <span className="text-3xl flex justify-center mb-2">{stat.icon}</span>
             <p className={`font-heading font-bold text-2xl ${stat.color}`}>
               {stat.value}
             </p>
@@ -91,15 +92,12 @@ const PaymentHistory = () => {
           </motion.div>
         ))}
       </div>
-
-      {/* Payment List */}
       {payments.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-12 text-center"
-        >
-          <span className="text-6xl block mb-4">💳</span>
+          className="glass-card p-12 text-center justify-center items-center">
+          <span className="text-6xl flex justify-center mb-4"><CiCreditCard1 color="#0D9488"/></span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No payments yet
           </h3>
@@ -137,21 +135,19 @@ const PaymentHistory = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors"
-                  >
+                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={payment.serviceImage || "https://placehold.co/48"}
                           alt={payment.serviceName}
-                          className="w-10 h-10 rounded-lg object-cover"
-                        />
+                          className="w-10 h-10 rounded-lg object-cover"/>
                         <div>
                           <p className="font-body font-medium text-sm text-base-content">
                             {payment.serviceName}
                           </p>
                           <p className="flex items-center gap-1 font-body text-xs text-base-content/50">
-                            <HiLocationMarker size={10} />
+                            <HiLocationMarker size={16} color="red"/>
                             {payment.location}
                           </p>
                         </div>
@@ -171,12 +167,12 @@ const PaymentHistory = () => {
                         </span>
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-heading font-bold text-primary">
-                      ৳{payment.serviceCost?.toLocaleString()}
+                    <td className="flex gap-1 items-center px-6 py-4 font-heading font-bold text-primary">
+                      <TbCurrencyTaka size={20}/>{payment.serviceCost?.toLocaleString()}
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 rounded-full text-xs font-body font-medium bg-green-500/10 text-green-500">
-                        ✓ Paid
+                          Paid
                       </span>
                     </td>
                   </motion.tr>

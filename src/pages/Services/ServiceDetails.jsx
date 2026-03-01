@@ -74,7 +74,7 @@ const ServiceDetails = () => {
         bookingDate: formData.bookingDate,
         location: formData.location,
       })
-      toast.success("Booking confirmed! 🎉")
+      toast.success("Booking confirmed!")
       setModalOpen(false)
       setFormData({ bookingDate: "", location: "" })
     } catch (error) {

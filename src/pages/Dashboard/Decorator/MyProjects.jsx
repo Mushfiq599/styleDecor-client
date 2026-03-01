@@ -4,6 +4,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import useAuth from "../../../hooks/useAuth"
 import { HiCalendar, HiLocationMarker, HiUser } from "react-icons/hi"
+import { FaArrowRight } from "react-icons/fa";
 
 const statusColors = {
   assigned: "bg-blue-500/10 text-blue-500",
@@ -84,7 +85,6 @@ const MyProjects = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           My Projects
@@ -98,9 +98,7 @@ const MyProjects = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-12 text-center"
-        >
-          <span className="text-6xl block mb-4">🎨</span>
+          className="glass-card p-12 text-center">
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No projects assigned yet
           </h3>
@@ -116,17 +114,13 @@ const MyProjects = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="glass-card p-6"
-            >
+              className="glass-card p-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                {/* Image */}
                 <img
                   src={project.serviceImage || "https://placehold.co/100"}
                   alt={project.serviceName}
-                  className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0"
-                />
+                  className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0"/>
 
-                {/* Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                     <h3 className="font-heading font-semibold text-lg text-base-content">
@@ -152,7 +146,6 @@ const MyProjects = () => {
                     </span>
                   </div>
 
-                  {/* Progress Steps */}
                   <div className="mb-4">
                     <div className="flex items-center gap-1 flex-wrap">
                       {Object.entries(statusLabels).map(([key, label], index) => {
@@ -170,12 +163,9 @@ const MyProjects = () => {
                               <div className={`w-4 h-px ${isDone ? "bg-primary" : "bg-base-300"}`} />
                             )}
                           </div>
-                        )
-                      })}
+                        )})}
                     </div>
                   </div>
-
-                  {/* Update Button */}
                   {nextStatus[project.status] && (
                     <button
                       onClick={() => handleStatusUpdate(project._id, project.status)}
@@ -186,15 +176,14 @@ const MyProjects = () => {
                         <span className="loading loading-spinner loading-xs" />
                       ) : (
                         <>
-                          ➡️ Move to {statusLabels[nextStatus[project.status]]}
+                          <FaArrowRight /> Move to {statusLabels[nextStatus[project.status]]}
                         </>
                       )}
                     </button>
                   )}
-
                   {project.status === "completed" && (
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-500/10 text-green-500 font-body font-medium text-sm rounded-xl">
-                      ✅ Project Completed
+                      Project Completed
                     </span>
                   )}
                 </div>
