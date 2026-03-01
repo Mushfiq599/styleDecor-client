@@ -28,7 +28,6 @@ import Contact from "./pages/Contact";
 
 const router = createBrowserRouter([
 
-  // ─── Public Routes (with Navbar + Footer) ────────────
   {
     element: <MainLayout />,
     children: [
@@ -41,8 +40,6 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact /> },
     ],
   },
-
-  // ─── Dashboard (Private, no Footer) ──────────────────
   {
     path: "/dashboard",
     element: (
@@ -66,8 +63,6 @@ const router = createBrowserRouter([
       { path: "decorator/earnings", element: <DecoratorRoute><Earnings /></DecoratorRoute> },
     ],
   },
-
-  // ─── 404 ─────────────────────────────────────────────
   { path: "*", element: <ErrorPage /> },
 ]);
 
