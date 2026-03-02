@@ -4,6 +4,11 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCheck } from "react-icons/hi"
+import { FaLightbulb, FaUser, FaMapPin } from "react-icons/fa";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { SlCalender } from "react-icons/sl";
+import { FaCircleCheck } from "react-icons/fa6";
+import { GrUserWorker } from "react-icons/gr";
 
 const AssignDecorator = () => {
   const axiosSecure = useAxiosSecure()
@@ -78,10 +83,9 @@ const AssignDecorator = () => {
       </div>
     )
   }
-  
+
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Assign Decorators
@@ -91,9 +95,8 @@ const AssignDecorator = () => {
         </p>
       </div>
 
-      {/* Info banner */}
       <div className="glass-card p-4 mb-6 flex items-center gap-3 border-l-4 border-primary">
-        <span className="text-2xl">💡</span>
+        <span className="text-2xl"><FaLightbulb color="#FFFFC5" /></span>
         <p className="font-body text-sm text-base-content/70">
           Only <strong>paid bookings</strong> with <strong>pending</strong> status are shown here. Make sure users have paid before assigning a decorator.
         </p>
@@ -105,7 +108,7 @@ const AssignDecorator = () => {
         </div>
       ) : bookings.length === 0 ? (
         <div className="text-center py-20">
-          <span className="text-5xl block mb-3">✅</span>
+          <span className="text-5xl flex justify-center mb-3"><FaCircleCheck color="#008000" /></span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             All caught up!
           </h3>
@@ -115,7 +118,7 @@ const AssignDecorator = () => {
         </div>
       ) : decorators.length === 0 ? (
         <div className="text-center py-20">
-          <span className="text-5xl block mb-3">👷</span>
+          <span className="text-5xl flex justify-center mb-3"><GrUserWorker /></span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No decorators available
           </h3>
@@ -131,27 +134,24 @@ const AssignDecorator = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="glass-card p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center"
-            >
-              {/* Service Info */}
+              className="glass-card p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <img
                 src={booking.serviceImage || "https://placehold.co/80"}
                 alt={booking.serviceName}
-                className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-              />
+                className="w-16 h-16 rounded-xl object-cover flex-shrink-0"/>
               <div className="flex-1 min-w-0">
                 <p className="font-heading font-semibold text-base text-base-content">
                   {booking.serviceName}
                 </p>
-                <p className="font-body text-xs text-base-content/60 mt-0.5">
-                  👤 {booking.userName} · 📅 {booking.bookingDate} · 📍 {booking.location}
+                <p className="font- flex gap-1 text-xs text-base-content/60 mt-0.5">
+                  <FaUser /> {booking.userName} · <SlCalender />
+                  {booking.bookingDate} · <FaMapPin color="red"/>{booking.location}
                 </p>
-                <p className="font-heading font-bold text-primary mt-1">
-                  ৳{booking.serviceCost?.toLocaleString()}
+                <p className="flex items-center font-heading font-bold text-primary mt-1">
+                  <TbCurrencyTaka />{booking.serviceCost?.toLocaleString()}
                 </p>
               </div>
 
-              {/* Assign Section */}
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <select
                   value={selectedDecorator[booking._id] || ""}
@@ -161,8 +161,7 @@ const AssignDecorator = () => {
                       [booking._id]: e.target.value,
                     })
                   }
-                  className="flex-1 sm:w-48 px-3 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300"
-                >
+                  className="flex-1 sm:w-48 px-3 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300">
                   <option value="">Select Decorator</option>
                   {decorators.map((d) => (
                     <option key={d._id} value={d.email}>
@@ -173,8 +172,7 @@ const AssignDecorator = () => {
                 <button
                   onClick={() => handleAssign(booking._id)}
                   disabled={assigning === booking._id}
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-primary text-white font-body text-sm font-medium rounded-xl hover:bg-primary/90 transition-all duration-200 disabled:opacity-60 flex-shrink-0"
-                >
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-primary text-white font-body text-sm font-medium rounded-xl hover:bg-primary/90 transition-all duration-200 disabled:opacity-60 flex-shrink-0">
                   {assigning === booking._id ? (
                     <span className="loading loading-spinner loading-xs" />
                   ) : (

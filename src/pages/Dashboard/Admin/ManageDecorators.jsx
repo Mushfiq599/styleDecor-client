@@ -64,7 +64,6 @@ const ManageDecorators = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="font-heading text-2xl font-bold text-base-content">
@@ -74,12 +73,10 @@ const ManageDecorators = () => {
             Assign or remove decorator roles from users
           </p>
         </div>
-        {/* Search */}
         <div className="relative">
           <HiSearch
             className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40"
-            size={16}
-          />
+            size={16}/>
           <input
             type="text"
             value={search}
@@ -121,18 +118,14 @@ const ManageDecorators = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors"
-                  >
+                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={
-                            u.photo ||
-                            `https://ui-avatars.com/api/?name=${u.name}&background=0D9488&color=fff`
-                          }
+                            u.photo ||`https://ui-avatars.com/api/?name=${u.name}&background=0D9488&color=fff`}
                           alt={u.name}
-                          className="w-9 h-9 rounded-xl object-cover"
-                        />
+                          className="w-9 h-9 rounded-xl object-cover"/>
                         <p className="font-body font-medium text-sm text-base-content">
                           {u.name}
                         </p>
@@ -151,8 +144,7 @@ const ManageDecorators = () => {
                         {u.role !== "decorator" && u.role !== "admin" && (
                           <button
                             onClick={() => handleRoleChange(u.email, "decorator")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white font-body text-xs font-medium rounded-lg transition-all duration-200"
-                          >
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white font-body text-xs font-medium rounded-lg transition-all duration-200">
                             <HiCheck size={14} />
                             Make Decorator
                           </button>
@@ -160,8 +152,7 @@ const ManageDecorators = () => {
                         {u.role === "decorator" && (
                           <button
                             onClick={() => handleRoleChange(u.email, "user")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white font-body text-xs font-medium rounded-lg transition-all duration-200"
-                          >
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white font-body text-xs font-medium rounded-lg transition-all duration-200">
                             <HiX size={14} />
                             Remove Decorator
                           </button>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import { TbCurrencyTaka } from "react-icons/tb";
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import useAuth from "../../../hooks/useAuth"
@@ -113,7 +114,6 @@ const ManageServices = () => {
 
   return (
     <div>
-      {/* ── Header ── */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="font-heading text-2xl font-bold text-base-content">
@@ -125,14 +125,12 @@ const ManageServices = () => {
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-body font-medium text-sm rounded-xl hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300"
-        >
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-body font-medium text-sm rounded-xl hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300">
           <HiPlus size={18} />
           Add Service
         </button>
       </div>
 
-      {/* ── Services Table ── */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <span className="loading loading-spinner loading-lg text-primary" />
@@ -167,15 +165,13 @@ const ManageServices = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors"
-                  >
+                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={service.image}
                           alt={service.service_name}
-                          className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
-                        />
+                          className="w-12 h-12 rounded-xl object-cover flex-shrink-0"/>
                         <div>
                           <p className="font-body font-semibold text-sm text-base-content">
                             {service.service_name}
@@ -191,8 +187,8 @@ const ManageServices = () => {
                         {service.service_category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-heading font-bold text-primary">
-                      ৳{service.cost.toLocaleString()}
+                    <td className="px-6 py-4 flex items-center font-heading font-bold text-primary">
+                      <TbCurrencyTaka size={18} />{service.cost.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 font-body text-sm text-base-content/60">
                       {service.unit}
@@ -201,14 +197,12 @@ const ManageServices = () => {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(service)}
-                          className="w-8 h-8 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200"
-                        >
+                          className="w-8 h-8 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200">
                           <HiPencil size={14} />
                         </button>
                         <button
                           onClick={() => handleDelete(service._id)}
-                          className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all duration-200"
-                        >
+                          className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all duration-200">
                           <HiTrash size={14} />
                         </button>
                       </div>
@@ -221,7 +215,6 @@ const ManageServices = () => {
         </div>
       )}
 
-      {/* ── Add/Edit Modal ── */}
       <AnimatePresence>
         {modalOpen && (
           <>
@@ -230,26 +223,21 @@ const ManageServices = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setModalOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-            />
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"/>
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            >
+              className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-lg p-8 relative max-h-[90vh] overflow-y-auto">
 
-                {/* Close */}
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-base-200 flex items-center justify-center text-base-content/50 hover:text-base-content transition-colors"
-                >
+                  className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-base-200 flex items-center justify-center text-base-content/50 hover:text-base-content transition-colors">
                   <HiX size={16} />
                 </button>
 
-                {/* Modal Header */}
                 <div className="mb-6">
                   <h2 className="font-heading text-2xl font-bold text-base-content">
                     {editingService ? "Edit Service" : "Add New Service"}
@@ -261,10 +249,7 @@ const ManageServices = () => {
                   </p>
                 </div>
 
-                {/* Form */}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-                  {/* Service Name */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Service Name
@@ -280,8 +265,6 @@ const ManageServices = () => {
                       className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
                     />
                   </div>
-
-                  {/* Cost and Unit */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
@@ -291,12 +274,10 @@ const ManageServices = () => {
                         type="number"
                         value={formData.cost}
                         onChange={(e) =>
-                          setFormData({ ...formData, cost: e.target.value })
-                        }
+                          setFormData({ ...formData, cost: e.target.value })}
                         placeholder="e.g. 5000"
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-                      />
+                        className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
                     </div>
                     <div>
                       <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
@@ -306,16 +287,12 @@ const ManageServices = () => {
                         type="text"
                         value={formData.unit}
                         onChange={(e) =>
-                          setFormData({ ...formData, unit: e.target.value })
-                        }
+                          setFormData({ ...formData, unit: e.target.value })}
                         placeholder="e.g. per room"
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-                      />
+                        className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
                     </div>
                   </div>
-
-                  {/* Category */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Category
@@ -326,10 +303,8 @@ const ManageServices = () => {
                         setFormData({
                           ...formData,
                           service_category: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300"
-                    >
+                        })}
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300">
                       {categories.map((cat) => (
                         <option key={cat} value={cat}>
                           {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -337,8 +312,6 @@ const ManageServices = () => {
                       ))}
                     </select>
                   </div>
-
-                  {/* Image URL */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Image URL
@@ -347,14 +320,11 @@ const ManageServices = () => {
                       type="url"
                       value={formData.image}
                       onChange={(e) =>
-                        setFormData({ ...formData, image: e.target.value })
-                      }
+                        setFormData({ ...formData, image: e.target.value })}
                       placeholder="https://example.com/image.jpg"
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
                   </div>
 
-                  {/* Description */}
                   <div>
                     <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
                       Description
@@ -370,16 +340,12 @@ const ManageServices = () => {
                       placeholder="Describe the service..."
                       required
                       rows={3}
-                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300 resize-none"
-                    />
+                      className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300 resize-none"/>
                   </div>
-
-                  {/* Submit */}
                   <button
                     type="submit"
                     disabled={saving}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300 disabled:opacity-60 mt-2"
-                  >
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300 disabled:opacity-60 mt-2">
                     {saving ? (
                       <span className="loading loading-spinner loading-sm" />
                     ) : (

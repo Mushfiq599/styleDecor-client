@@ -5,6 +5,7 @@ import toast from "react-hot-toast"
 import {
   HiCalendar, HiLocationMarker, HiSearch, HiFilter
 } from "react-icons/hi"
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -34,7 +35,6 @@ const ManageBookings = () => {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-
   const fetchBookings = async () => {
     try {
       const res = await axiosSecure.get("/bookings")
@@ -61,7 +61,6 @@ const ManageBookings = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Manage Bookings
@@ -70,29 +69,24 @@ const ManageBookings = () => {
           View and manage all customer bookings
         </p>
       </div>
-
-      {/* Filters */}
       <div className="glass-card p-4 mb-6 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <HiSearch
             className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40"
-            size={16}
-          />
+            size={16}/>
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by service, user..."
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"
-          />
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
         </div>
         <div className="flex items-center gap-2">
           <HiFilter className="text-base-content/40" size={16} />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300"
-          >
+            className="px-4 py-2.5 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300">
             <option value="all">All Status</option>
             {Object.entries(statusLabels).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
@@ -101,7 +95,6 @@ const ManageBookings = () => {
         </div>
       </div>
 
-      {/* Stats Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
           { label: "Total", value: bookings.length, color: "text-base-content" },
@@ -120,7 +113,6 @@ const ManageBookings = () => {
         ))}
       </div>
 
-      {/* Bookings Table */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <span className="loading loading-spinner loading-lg text-primary" />
@@ -151,15 +143,13 @@ const ManageBookings = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04 }}
-                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors"
-                  >
+                    className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={booking.serviceImage || "https://placehold.co/48"}
                           alt={booking.serviceName}
-                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
-                        />
+                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0"/>
                         <p className="font-body font-medium text-sm text-base-content max-w-[150px] truncate">
                           {booking.serviceName}
                         </p>
@@ -196,8 +186,9 @@ const ManageBookings = () => {
                         {booking.paymentStatus === "paid" ? "✓ Paid" : "Unpaid"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-heading font-bold text-primary">
-                      ৳{booking.serviceCost?.toLocaleString()}
+                    <td className="px-6 py-4 flex items-center font-heading font-bold text-primary">
+                      <TbCurrencyTaka size={18}/>
+                      {booking.serviceCost?.toLocaleString()}
                     </td>
                   </motion.tr>
                 ))}
