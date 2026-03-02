@@ -1,16 +1,63 @@
-# React + Vite
+# StyleDecor - Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern **Smart Home & Ceremony Decoration Booking System** built with React, Firebase, and Stripe. Users can browse decoration services, book them, and pay online. Admins manage services and assign decorators. Decorators track and update their project status.
 
-Currently, two official plugins are available:
+## 🔗 Live Site
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[https://style-decor-client-five.vercel.app](https://style-decor-client-five.vercel.app)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+### Public
+- Animated hero section with fullscreen image slider
+- Browse all decoration services with search & filter by category and budget
+- Service details page with booking modal
+- Service coverage map (React Leaflet)
+- About and Contact pages
+- Light / Dark theme toggle
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### User
+- Register and login with Email/Password or Google
+- Book decoration services
+- Pay securely via Stripe
+- View booking history and payment history
+- Update profile
+
+### Admin
+- Analytics dashboard
+- Manage services (Create, Read, Update, Delete)
+- Manage decorators (assign/remove decorator role)
+- Manage all bookings
+- Assign decorators to bookings
+
+### Decorator
+- View assigned projects
+- Today's schedule
+- Update project status (Assigned → Planning → Materials Prepared → On the Way → Setup in Progress → Completed)
+- View earnings
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| React + Vite | Frontend framework |
+| Tailwind CSS + DaisyUI | Styling and UI components |
+| Framer Motion | Animations |
+| Firebase Auth | Authentication (Email + Google) |
+| Axios | API calls |
+| React Router DOM | Client-side routing |
+| Stripe.js | Payment processing |
+| React Leaflet | Service coverage map |
+| Swiper.js | Hero image slider |
+| React Icons | Icon library |
+| React Hot Toast | Notifications |
+| SweetAlert2 | Popup modals |
+
+
+| VITE_FIREBASE_APP_ID | Firebase app ID |
+| VITE_STRIPE_PUBLISHABLE_KEY | Stripe publishable key |
+| VITE_API_URL | Backend server URL |
