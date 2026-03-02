@@ -3,6 +3,12 @@ import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import useAuth from "../../../hooks/useAuth"
 import { HiCalendar, HiLocationMarker } from "react-icons/hi"
+import { BsHourglassSplit } from "react-icons/bs";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { FaLightbulb } from "react-icons/fa";
+import { FaTrophy } from "react-icons/fa";
+import { TbBrandCashapp } from "react-icons/tb";
+
 
 const COMMISSION = 0.30
 
@@ -34,7 +40,6 @@ const Earnings = () => {
     p => p.status !== "completed" && p.status !== "cancelled"
   )
 
-  // Decorator earns 30% of service cost
   const COMMISSION = 0.30
   const totalEarned = completedProjects.reduce(
     (sum, p) => sum + (p.serviceCost * COMMISSION), 0
@@ -53,7 +58,6 @@ const Earnings = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Earnings Summary
@@ -62,28 +66,26 @@ const Earnings = () => {
           Your earnings from completed decoration projects
         </p>
       </div>
-
-      {/* Earnings Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           {
             label: "Total Earned",
-            value: `৳${totalEarned.toLocaleString()}`,
-            icon: "💰",
+            value: `${totalEarned.toLocaleString()}`,
+            icon: <TbBrandCashapp color="#85BB65"/>,
             color: "text-primary",
             bg: "bg-primary/5 border-primary/10",
           },
           {
             label: "Pending Earnings",
-            value: `৳${pendingEarnings.toLocaleString()}`,
-            icon: "⏳",
+            value: `${pendingEarnings.toLocaleString()}`,
+            icon: <BsHourglassSplit color="#F97316"/>,
             color: "text-yellow-500",
             bg: "bg-yellow-500/5 border-yellow-500/10",
           },
           {
             label: "Projects Done",
             value: completedProjects.length,
-            icon: "🏆",
+            icon: <FaTrophy color="#FFD700" />,
             color: "text-green-500",
             bg: "bg-green-500/5 border-green-500/10",
           },
@@ -92,9 +94,8 @@ const Earnings = () => {
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`glass-card p-6 text-center border ${stat.bg}`}
-          >
-            <span className="text-4xl block mb-3">{stat.icon}</span>
+            className={`glass-card p-6 text-center border ${stat.bg}`}>
+            <span className="text-4xl flex justify-center mb-3">{stat.icon}</span>
             <p className={`font-heading font-bold text-3xl ${stat.color}`}>
               {stat.value}
             </p>
@@ -104,17 +105,13 @@ const Earnings = () => {
           </motion.div>
         ))}
       </div>
-
-      {/* Commission Info */}
       <div className="glass-card p-4 mb-6 flex items-center gap-3 border-l-4 border-primary">
-        <span className="text-2xl">💡</span>
+        <span className="text-2xl"><FaLightbulb color="#FFDC4C"/></span>
         <p className="font-body text-sm text-base-content/70">
           Your commission rate is <strong>30%</strong> of each project's service cost.
           Earnings are calculated upon project completion.
         </p>
       </div>
-
-      {/* Project History */}
       <div>
         <h3 className="font-heading font-semibold text-lg text-base-content mb-4">
           Project History
@@ -157,15 +154,13 @@ const Earnings = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
-                      className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors"
-                    >
+                      className="border-b border-base-300 last:border-0 hover:bg-base-200/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
                             src={project.serviceImage || "https://placehold.co/48"}
                             alt={project.serviceName}
-                            className="w-10 h-10 rounded-lg object-cover"
-                          />
+                            className="w-10 h-10 rounded-lg object-cover"/>
                           <div>
                             <p className="font-body font-medium text-sm text-base-content">
                               {project.serviceName}
@@ -193,8 +188,8 @@ const Earnings = () => {
                           {project.status.replace(/_/g, " ")}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-heading font-bold text-base-content">
-                        ৳{project.serviceCost?.toLocaleString()}
+                      <td className="px-6 py-4 flex items-center font-heading font-bold text-base-content">
+                        <TbCurrencyTaka size={20}/>{project.serviceCost?.toLocaleString()}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`font-heading font-bold text-lg ${project.status === "completed"
@@ -202,7 +197,7 @@ const Earnings = () => {
                             : "text-base-content/40"
                           }`}>
                           {project.status === "completed"
-                            ? `৳${(project.serviceCost * COMMISSION).toLocaleString()}`
+                            ? `${(project.serviceCost * COMMISSION).toLocaleString()}`
                             : "Pending"}
                         </span>
                       </td>

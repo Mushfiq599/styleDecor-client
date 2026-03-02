@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import { BsFillPinAngleFill } from "react-icons/bs";
+import { FaTools } from "react-icons/fa";
+import { TbTruckDelivery } from "react-icons/tb";
+import { SlCalender } from "react-icons/sl";
+import { CgNotes } from "react-icons/cg";
+import { FaUser } from "react-icons/fa";
+import { IoCheckbox } from "react-icons/io5";
 import toast from "react-hot-toast"
 import useAuth from "../../../hooks/useAuth"
 
 const statusFlow = [
-  { key: "assigned", label: "Assigned", icon: "📌" },
-  { key: "planning", label: "Planning Phase", icon: "📝" },
+  { key: "assigned", label: "Assigned", icon: <BsFillPinAngleFill color="red"/> },
+  { key: "planning", label: "Planning Phase", icon: <CgNotes color="#F97316" /> },
   { key: "materials_prepared", label: "Materials Prepared", icon: "📦" },
-  { key: "on_the_way", label: "On The Way", icon: "🚗" },
-  { key: "setup_in_progress", label: "Setup In Progress", icon: "🔧" },
-  { key: "completed", label: "Completed", icon: "✅" },
+  { key: "on_the_way", label: "On The Way", icon: <TbTruckDelivery color="#F97316"/> },
+  { key: "setup_in_progress", label: "Setup In Progress", icon: <FaTools color="gray"/> },
+  { key: "completed", label: "Completed", icon: <IoCheckbox color="green"/> },
 ]
 
 const UpdateStatus = () => {
@@ -67,7 +74,6 @@ const UpdateStatus = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-heading text-2xl font-bold text-base-content">
           Update Project Status
@@ -77,7 +83,6 @@ const UpdateStatus = () => {
         </p>
       </div>
 
-      {/* Status Flow Guide */}
       <div className="glass-card p-5 mb-6">
         <p className="font-body text-xs text-base-content/50 uppercase tracking-wider mb-3">
           Status Flow
@@ -100,8 +105,7 @@ const UpdateStatus = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-12 text-center"
-        >
+          className="glass-card p-12 text-center">
           <span className="text-6xl block mb-4">✨</span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No active projects
@@ -122,26 +126,21 @@ const UpdateStatus = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
-                className="glass-card p-6"
-              >
-                {/* Project Info */}
+                className="glass-card p-6">
                 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-base-300">
                   <img
                     src={project.serviceImage || "https://placehold.co/60"}
                     alt={project.serviceName}
-                    className="w-14 h-14 rounded-xl object-cover"
-                  />
+                    className="w-14 h-14 rounded-xl object-cover"/>
                   <div>
                     <h3 className="font-heading font-semibold text-base text-base-content">
                       {project.serviceName}
                     </h3>
-                    <p className="font-body text-xs text-base-content/60">
-                      👤 {project.userName} · 📅 {project.bookingDate}
+                    <p className="font-body flex gap-1 text-xs text-base-content/60">
+                      <FaUser /> {project.userName} · <SlCalender /> {project.bookingDate}
                     </p>
                   </div>
                 </div>
-
-                {/* Status Steps */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                   {statusFlow.map((step, stepIndex) => {
                     const isPast = stepIndex < currentIndex
@@ -153,8 +152,7 @@ const UpdateStatus = () => {
                       <button
                         key={step.key}
                         onClick={() =>
-                          isNext && handleStatusUpdate(project._id, step.key)
-                        }
+                          isNext && handleStatusUpdate(project._id, step.key)}
                         disabled={!isNext || updating === project._id}
                         className={`p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-200 ${isPast
                           ? "bg-primary/10 text-primary cursor-default"
@@ -163,8 +161,7 @@ const UpdateStatus = () => {
                             : isNext
                               ? "bg-base-200 text-base-content hover:bg-secondary hover:text-white cursor-pointer border-2 border-dashed border-secondary/50"
                               : "bg-base-200/50 text-base-content/30 cursor-default"
-                          }`}
-                      >
+                          }`}>
                         <span className="text-xl">{step.icon}</span>
                         <span className="font-body text-xs font-medium text-center leading-tight">
                           {step.label}
@@ -180,12 +177,10 @@ const UpdateStatus = () => {
                           </span>
                         )}
                       </button>
-                    )
-                  })}
+                    )})}
                 </div>
               </motion.div>
-            )
-          })}
+            )})}
         </div>
       )}
     </div>
