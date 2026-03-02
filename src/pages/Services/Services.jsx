@@ -129,7 +129,7 @@ const Services = () => {
           </div>
         ) : services.length === 0 ? (
           <div className="text-center py-20">
-            <span className="text-6xl block mb-4"><HiSearch
+            <span className="text-6xl flex justify-center mb-4"><HiSearch
               className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40"
               size={18}
             /></span>
