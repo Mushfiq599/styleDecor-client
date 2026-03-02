@@ -57,5 +57,3 @@ A modern **Smart Home & Ceremony Decoration Booking System** built with React, F
 | React Hot Toast | Notifications |
 | SweetAlert2 | Popup modals |
 
-| VITE_STRIPE_PUBLISHABLE_KEY | Stripe publishable key |
-| VITE_API_URL | Backend server URL |
