@@ -12,7 +12,7 @@ const useRole = () => {
             if (user?.email) {
                 try {
                     const res = await axios.get(
-                        `http://localhost:5000/users/role/${user.email}`
+                        `https://styledecor-server-jm4k.onrender.com/users/role/${user.email}`
                     );
                     setRole(res.data.role);
                 } catch (err) {

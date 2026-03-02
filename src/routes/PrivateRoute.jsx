@@ -5,7 +5,6 @@ const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
     const location = useLocation();
 
-    // Still checking if user is logged in
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -14,13 +13,10 @@ const PrivateRoute = ({ children }) => {
         );
     }
 
-    // User is logged in → show the page
     if (user) {
         return children;
     }
 
-    // Not logged in → redirect to login
-    // We save where they were trying to go using "state"
     return <Navigate to="/login" state={{ from: location }} replace />;
 };
 

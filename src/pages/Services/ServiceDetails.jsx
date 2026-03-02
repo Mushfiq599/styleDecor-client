@@ -38,7 +38,7 @@ const ServiceDetails = () => {
     const fetchService = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/services/${id}`
+          `https://styledecor-server-jm4k.onrender.com/services/${id}`
         )
         setService(res.data)
       } catch (error) {

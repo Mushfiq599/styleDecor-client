@@ -32,7 +32,7 @@ const Services = () => {
       if (minCost) params.minCost = minCost
       if (maxCost) params.maxCost = maxCost
 
-      const res = await axios.get("http://localhost:5000/services", { params })
+      const res = await axios.get("https://styledecor-server-jm4k.onrender.com/services", { params })
       setServices(res.data)
     } catch (error) {
       console.error("Failed to fetch services")

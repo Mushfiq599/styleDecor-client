@@ -13,11 +13,9 @@ import axios from "axios"
 
 export const AuthContext = createContext(null)
 const googleProvider = new GoogleAuthProvider()
-
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-
     const register = (email, password) => {
         setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
@@ -35,7 +33,6 @@ const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setLoading(true)
-        // Remove token from localStorage on logout
         localStorage.removeItem("styleDecor-token")
         return signOut(auth)
     }
@@ -53,18 +50,15 @@ const AuthProvider = ({ children }) => {
             setLoading(false)
 
             if (currentUser?.email) {
-                // ── Request JWT token from our server ──
                 try {
-                    const res = await axios.post("http://localhost:5000/auth/jwt", {
+                    const res = await axios.post("https://styledecor-server-jm4k.onrender.com/auth/jwt", {
                         email: currentUser.email,
                     })
-                    // Store token in localStorage
                     localStorage.setItem("styleDecor-token", res.data.token)
                 } catch (error) {
                     console.error("Failed to get JWT token:", error)
                 }
             } else {
-                // User logged out — remove token
                 localStorage.removeItem("styleDecor-token")
             }
         })

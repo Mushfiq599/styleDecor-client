@@ -45,7 +45,7 @@ const TopDecoratorsSection = () => {
   const [decorators, setDecorators] = useState([])
 
   useEffect(() => {
-    axios.get("http://localhost:5000/users/decorators")
+    axios.get("https://styledecor-server-jm4k.onrender.com/users/decorators")
       .then(res => {
         const realDecorators = res.data.map(d => ({
           _id: d._id,

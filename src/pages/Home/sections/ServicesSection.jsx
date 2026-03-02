@@ -21,7 +21,7 @@ const ServicesSection = () => {
     const [services, setServices] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:5000/services")
+        axios.get("https://styledecor-server-jm4k.onrender.com/services")
             .then(res => setServices(res.data.slice(0, 6)))
             .catch(err => console.error(err))
     }, [])

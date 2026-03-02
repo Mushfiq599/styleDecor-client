@@ -1,10 +1,9 @@
 import axios from "axios"
 
 const axiosSecure = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://styledecor-server-jm4k.onrender.com",
 })
 
-// Automatically attach token to every request
 axiosSecure.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("styleDecor-token")
@@ -18,12 +17,10 @@ axiosSecure.interceptors.request.use(
     }
 )
 
-// If token expired → logout user automatically
 axiosSecure.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401 || error.response?.status === 403) {
-            // Token invalid or expired
             localStorage.removeItem("styleDecor-token")
             window.location.href = "/login"
         }
