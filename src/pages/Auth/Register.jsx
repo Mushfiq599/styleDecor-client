@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
 import useAuth from "../../hooks/useAuth"
@@ -6,16 +6,22 @@ import axios from "axios"
 import { API_URL } from "../../utils/apiUrl"
 import toast from "react-hot-toast"
 import { FcGoogle } from "react-icons/fc"
-import { HiEye, HiEyeOff, HiArrowRight } from "react-icons/hi"
-import { FaCheck } from "react-icons/fa";
+import { HiEye, HiEyeOff, HiArrowRight, HiPhotograph, HiX } from "react-icons/hi"
+import { FaCheck } from "react-icons/fa"
+
+const IMAGEBB_API_KEY = import.meta.env.VITE_IMAGEBB_API_KEY
 
 const Register = () => {
   const { register, googleLogin, updateUserProfile } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
+  const fileInputRef = useRef(null)
+
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [imageUploading, setImageUploading] = useState(false)
+  const [imagePreview, setImagePreview] = useState(null)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,6 +33,42 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Show local preview immediately
+    const reader = new FileReader()
+    reader.onloadend = () => setImagePreview(reader.result)
+    reader.readAsDataURL(file)
+
+    // Upload to ImageBB
+    setImageUploading(true)
+    try {
+      const formDataImg = new FormData()
+      formDataImg.append("image", file)
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+        formDataImg
+      )
+      const url = res.data.data.url
+      setFormData((prev) => ({ ...prev, photoURL: url }))
+      toast.success("Photo uploaded!")
+    } catch (err) {
+      toast.error("Image upload failed. Try again.")
+      setImagePreview(null)
+      setFormData((prev) => ({ ...prev, photoURL: "" }))
+    } finally {
+      setImageUploading(false)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    setImagePreview(null)
+    setFormData((prev) => ({ ...prev, photoURL: "" }))
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
   const saveUserToDB = async (email, name, photo) => {
     await axios.post(`${API_URL}/users`, { email, name, photo })
   }
@@ -35,19 +77,15 @@ const Register = () => {
     e.preventDefault()
     const { name, email, password, photoURL } = formData
 
-    if (password.length < 6) {
-      return toast.error("Password must be at least 6 characters!")
-    }
-    if (!/[A-Z]/.test(password)) {
-      return toast.error("Password must contain at least one uppercase letter!")
-    }
+    if (password.length < 6) return toast.error("Password must be at least 6 characters!")
+    if (!/[A-Z]/.test(password)) return toast.error("Password must contain at least one uppercase letter!")
+    if (imageUploading) return toast.error("Please wait for the image to finish uploading!")
 
     setLoading(true)
     try {
       await register(email, password)
       await updateUserProfile(name, photoURL)
       await saveUserToDB(email, name, photoURL)
-
       toast.success("Account created successfully!")
       navigate(from, { replace: true })
     } catch (error) {
@@ -66,13 +104,11 @@ const Register = () => {
     try {
       const result = await googleLogin()
       const { email, displayName, photoURL } = result.user
-
       try {
         await saveUserToDB(email, displayName, photoURL)
       } catch (dbError) {
         console.error("DB save error:", dbError)
       }
-
       toast.success("Welcome to StyleDecor!")
       navigate(from, { replace: true })
     } catch (error) {
@@ -85,11 +121,12 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex">
+      {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200&q=80"
           alt="decoration"
-          className="w-full h-full object-cover"/>
+          className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-black/60" />
         <div className="absolute inset-0 flex flex-col justify-center px-16">
           <motion.div
@@ -98,21 +135,16 @@ const Register = () => {
             transition={{ duration: 0.8 }}>
             <Link to="/" className="flex items-center gap-2 mb-12">
               <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <img src="./logo.png" alt="Logo" className="rounded-lg"/>
+                <img src="./logo.png" alt="Logo" className="rounded-lg" />
               </div>
-              <span className="font-heading font-bold text-2xl text-white">
-                StyleDecor
-              </span>
+              <span className="font-heading font-bold text-2xl text-white">StyleDecor</span>
             </Link>
             <h2 className="font-heading text-4xl font-bold text-white mb-4 leading-tight">
-              Join Our Decoration
-              <br />
-              Community Today
+              Join Our Decoration<br />Community Today
             </h2>
             <p className="font-body text-white/70 text-base leading-relaxed">
               Book expert decorators, track your projects, and transform your space with just a few clicks.
             </p>
-
             <div className="mt-8 flex flex-col gap-3">
               {[
                 "Browse 50+ decoration services",
@@ -136,6 +168,7 @@ const Register = () => {
         </div>
       </div>
 
+      {/* Right panel */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-base-100">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -151,14 +184,10 @@ const Register = () => {
                 Style<span className="text-primary">Decor</span>
               </span>
             </Link>
-            <h1 className="font-heading text-3xl font-bold text-base-content mb-2">
-              Create Account
-            </h1>
+            <h1 className="font-heading text-3xl font-bold text-base-content mb-2">Create Account</h1>
             <p className="font-body text-base-content/60 text-sm">
               Already have an account?{" "}
-              <Link to="/login" className="text-primary font-medium hover:underline">
-                Sign in
-              </Link>
+              <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
             </p>
           </div>
 
@@ -177,10 +206,9 @@ const Register = () => {
           </div>
 
           <form onSubmit={handleRegister} className="flex flex-col gap-4">
+            {/* Name */}
             <div>
-              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
-                Full Name
-              </label>
+              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">Full Name</label>
               <input
                 type="text"
                 name="name"
@@ -188,13 +216,12 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="John Doe"
                 required
-                className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
+                className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300" />
             </div>
 
+            {/* Email */}
             <div>
-              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
-                Email Address
-              </label>
+              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -202,27 +229,60 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="john@example.com"
                 required
-                className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
+                className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300" />
             </div>
 
+            {/* Profile Photo Upload */}
             <div>
               <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
-                Photo URL{" "}
-                <span className="text-base-content/40 font-normal">(optional)</span>
+                Profile Photo <span className="text-base-content/40 font-normal">(optional)</span>
               </label>
+
+              {imagePreview ? (
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-base-200 border-2 border-primary/30">
+                  <img
+                    src={imagePreview}
+                    alt="preview"
+                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    {imageUploading ? (
+                      <div className="flex items-center gap-2">
+                        <span className="loading loading-spinner loading-xs text-primary" />
+                        <span className="font-body text-xs text-base-content/60">Uploading...</span>
+                      </div>
+                    ) : (
+                      <span className="font-body text-xs text-green-500 flex items-center gap-1">
+                        <FaCheck size={10} /> Photo uploaded successfully
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="w-7 h-7 rounded-lg bg-base-300 flex items-center justify-center text-base-content/50 hover:text-red-500 hover:bg-red-500/10 transition-colors flex-shrink-0">
+                    <HiX size={14} />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-base-200 border-2 border-dashed border-base-300 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all duration-300">
+                  <HiPhotograph size={20} className="text-base-content/40" />
+                  <span className="font-body text-sm text-base-content/40">Click to upload a photo</span>
+                </div>
+              )}
+
               <input
-                type="url"
-                name="photoURL"
-                value={formData.photoURL}
-                onChange={handleChange}
-                placeholder="https://example.com/photo.jpg"
-                className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden" />
             </div>
 
+            {/* Password */}
             <div>
-              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
-                Password
-              </label>
+              <label className="font-body text-sm font-medium text-base-content mb-1.5 block">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -231,7 +291,7 @@ const Register = () => {
                   onChange={handleChange}
                   placeholder="Min 6 chars, one uppercase"
                   required
-                  className="w-full px-4 py-3 pr-12 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300"/>
+                  className="w-full px-4 py-3 pr-12 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary focus:bg-base-100 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -243,16 +303,14 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || imageUploading}
               className="group w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-primary text-white font-body font-semibold rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none mt-2">
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
                 <>
                   Create Account
-                  <HiArrowRight
-                    size={18}
-                    className="group-hover:translate-x-1 transition-transform duration-300"/>
+                  <HiArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </>
               )}
             </button>

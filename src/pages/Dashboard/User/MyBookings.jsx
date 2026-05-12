@@ -4,7 +4,7 @@ import useAuth from "../../../hooks/useAuth"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
-import { HiCalendar, HiLocationMarker, HiClock, HiX } from "react-icons/hi"
+import { HiCalendar, HiLocationMarker, HiClock, HiX, HiChevronLeft, HiChevronRight } from "react-icons/hi"
 import { TbCurrencyTaka } from "react-icons/tb"
 import { GiNotebook } from "react-icons/gi"
 import { Link } from "react-router-dom"
@@ -38,12 +38,15 @@ const statusOrder = {
   setup_in_progress: 6, completed: 7, cancelled: 8,
 }
 
+const ITEMS_PER_PAGE = 5
+
 const MyBookings = () => {
   const { user } = useAuth()
   const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState("date-desc")
+  const [currentPage, setCurrentPage] = useState(1)
 
   const sortedBookings = [...bookings].sort((a, b) => {
     if (sortBy === "date-desc") return new Date(b.bookingDate) - new Date(a.bookingDate)
@@ -51,6 +54,18 @@ const MyBookings = () => {
     if (sortBy === "status") return (statusOrder[a.status] || 9) - (statusOrder[b.status] || 9)
     return 0
   })
+
+  const totalPages = Math.ceil(sortedBookings.length / ITEMS_PER_PAGE)
+  const paginatedBookings = sortedBookings.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
+
+  // Reset to page 1 when sort changes
+  const handleSortChange = (val) => {
+    setSortBy(val)
+    setCurrentPage(1)
+  }
 
   const fetchBookings = async () => {
     try {
@@ -100,6 +115,7 @@ const MyBookings = () => {
 
   return (
     <div>
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="font-heading text-2xl font-bold text-base-content">
@@ -115,7 +131,7 @@ const MyBookings = () => {
             <HiChevronUpDown className="text-base-content/40" size={16} />
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value)}
               className="px-3 py-2 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300 cursor-pointer">
               <option value="date-desc">Date: Newest First</option>
               <option value="date-asc">Date: Oldest First</option>
@@ -144,75 +160,116 @@ const MyBookings = () => {
           </Link>
         </motion.div>
       ) : (
-        <div className="flex flex-col gap-4">
-          {sortedBookings.map((booking, i) => (
-            <motion.div
-              key={booking._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="glass-card p-5 flex flex-col sm:flex-row gap-4">
-              <img
-                src={booking.serviceImage || "https://placehold.co/100x100"}
-                alt={booking.serviceName}
-                className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                  <h3 className="font-heading font-semibold text-base text-base-content">
-                    {booking.serviceName}
-                  </h3>
-                  <span className={`px-3 py-1 rounded-full text-xs font-body font-medium ${statusColors[booking.status]}`}>
-                    {statusLabels[booking.status]}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-3 mb-3">
-                  <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
-                    <HiCalendar size={14} />
-                    {booking.bookingDate}
-                  </span>
-                  <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
-                    <HiLocationMarker size={14} />
-                    {booking.location}
-                  </span>
-                  <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
-                    <HiClock size={14} />
-                    {new Date(booking.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="font-heading font-bold flex items-center text-lg text-primary">
-                      <TbCurrencyTaka size={20} />{booking.serviceCost.toLocaleString()}
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-body font-medium ${booking.paymentStatus === "paid"
-                      ? "bg-green-500/10 text-green-500"
-                      : "bg-yellow-500/10 text-yellow-500"
-                      }`}>
-                      {booking.paymentStatus === "paid" ? " Paid" : "Unpaid"}
+        <>
+          {/* Booking count */}
+          <p className="font-body text-sm text-base-content/50 mb-4">
+            Showing <span className="font-semibold text-base-content">
+              {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, sortedBookings.length)}
+            </span> of <span className="font-semibold text-base-content">{sortedBookings.length}</span> bookings
+          </p>
+
+          {/* Booking cards */}
+          <div className="flex flex-col gap-4">
+            {paginatedBookings.map((booking, i) => (
+              <motion.div
+                key={booking._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card p-5 flex flex-col sm:flex-row gap-4">
+                <img
+                  src={booking.serviceImage || "https://placehold.co/100x100"}
+                  alt={booking.serviceName}
+                  className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                    <h3 className="font-heading font-semibold text-base text-base-content">
+                      {booking.serviceName}
+                    </h3>
+                    <span className={`px-3 py-1 rounded-full text-xs font-body font-medium ${statusColors[booking.status]}`}>
+                      {statusLabels[booking.status]}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {booking.paymentStatus === "unpaid" &&
-                      booking.status !== "cancelled" && (
-                        <Link
-                          to={`/dashboard/user/payment/${booking._id}`}
-                          className="px-4 py-2 bg-primary text-white font-body text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors">
-                          Pay Now
-                        </Link>)}
-                    {booking.status === "pending" && (
-                      <button
-                        onClick={() => handleCancel(booking._id)}
-                        className="flex items-center gap-1 px-4 py-2 bg-red-500/10 text-red-500 font-body text-xs font-medium rounded-lg hover:bg-red-500/20 transition-colors">
-                        <HiX size={14} />
-                        Cancel
-                      </button>
-                    )}
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
+                      <HiCalendar size={14} />
+                      {booking.bookingDate}
+                    </span>
+                    <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
+                      <HiLocationMarker size={14} />
+                      {booking.location}
+                    </span>
+                    <span className="flex items-center gap-1 font-body text-xs text-base-content/60">
+                      <HiClock size={14} />
+                      {new Date(booking.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-heading font-bold flex items-center text-lg text-primary">
+                        <TbCurrencyTaka size={20} />{booking.serviceCost.toLocaleString()}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-body font-medium ${booking.paymentStatus === "paid"
+                        ? "bg-green-500/10 text-green-500"
+                        : "bg-yellow-500/10 text-yellow-500"
+                        }`}>
+                        {booking.paymentStatus === "paid" ? " Paid" : "Unpaid"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {booking.paymentStatus === "unpaid" &&
+                        booking.status !== "cancelled" && (
+                          <Link
+                            to={`/dashboard/user/payment/${booking._id}`}
+                            className="px-4 py-2 bg-primary text-white font-body text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors">
+                            Pay Now
+                          </Link>)}
+                      {booking.status === "pending" && (
+                        <button
+                          onClick={() => handleCancel(booking._id)}
+                          className="flex items-center gap-1 px-4 py-2 bg-red-500/10 text-red-500 font-body text-xs font-medium rounded-lg hover:bg-red-500/20 transition-colors">
+                          <HiX size={14} />
+                          Cancel
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center justify-center w-9 h-9 rounded-xl bg-base-200 text-base-content/60 hover:bg-base-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200">
+                <HiChevronLeft size={16} />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-9 h-9 rounded-xl font-body text-sm font-medium transition-all duration-200 ${currentPage === page
+                    ? "bg-primary text-white shadow-lg shadow-primary/25"
+                    : "bg-base-200 text-base-content/60 hover:bg-base-300"
+                    }`}>
+                  {page}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="flex items-center justify-center w-9 h-9 rounded-xl bg-base-200 text-base-content/60 hover:bg-base-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200">
+                <HiChevronRight size={16} />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
