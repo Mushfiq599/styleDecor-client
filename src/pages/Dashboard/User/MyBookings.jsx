@@ -5,9 +5,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCalendar, HiLocationMarker, HiClock, HiX } from "react-icons/hi"
-import { TbCurrencyTaka } from "react-icons/tb";
-import { GiNotebook } from "react-icons/gi";
+import { TbCurrencyTaka } from "react-icons/tb"
+import { GiNotebook } from "react-icons/gi"
 import { Link } from "react-router-dom"
+import { HiChevronUpDown } from "react-icons/hi2"
 
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -31,11 +32,25 @@ const statusLabels = {
   cancelled: "Cancelled",
 }
 
+const statusOrder = {
+  pending: 1, assigned: 2, planning: 3,
+  materials_prepared: 4, on_the_way: 5,
+  setup_in_progress: 6, completed: 7, cancelled: 8,
+}
+
 const MyBookings = () => {
   const { user } = useAuth()
   const axiosSecure = useAxiosSecure()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [sortBy, setSortBy] = useState("date-desc")
+
+  const sortedBookings = [...bookings].sort((a, b) => {
+    if (sortBy === "date-desc") return new Date(b.bookingDate) - new Date(a.bookingDate)
+    if (sortBy === "date-asc") return new Date(a.bookingDate) - new Date(b.bookingDate)
+    if (sortBy === "status") return (statusOrder[a.status] || 9) - (statusOrder[b.status] || 9)
+    return 0
+  })
 
   const fetchBookings = async () => {
     try {
@@ -85,21 +100,37 @@ const MyBookings = () => {
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="font-heading text-2xl font-bold text-base-content">
-          My Bookings
-        </h2>
-        <p className="font-body text-sm text-base-content/60 mt-1">
-          Track and manage all your decoration bookings
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 className="font-heading text-2xl font-bold text-base-content">
+            My Bookings
+          </h2>
+          <p className="font-body text-sm text-base-content/60 mt-1">
+            Track and manage all your decoration bookings
+          </p>
+        </div>
+
+        {bookings.length > 0 && (
+          <div className="flex items-center gap-2">
+            <HiChevronUpDown className="text-base-content/40" size={16} />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-3 py-2 rounded-xl bg-base-200 border-2 border-transparent focus:border-primary outline-none font-body text-sm text-base-content transition-all duration-300 cursor-pointer">
+              <option value="date-desc">Date: Newest First</option>
+              <option value="date-asc">Date: Oldest First</option>
+              <option value="status">Sort by Status</option>
+            </select>
+          </div>
+        )}
       </div>
 
-      {bookings.length === 0 ? (
+      {sortedBookings.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass-card p-12 text-center justify-center items-center">
-          <span className="text-6xl flex justify-center mb-4"><GiNotebook color="#0D9488"/></span>
+          <span className="text-6xl flex justify-center mb-4"><GiNotebook color="#0D9488" /></span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
             No bookings yet
           </h3>
@@ -114,7 +145,7 @@ const MyBookings = () => {
         </motion.div>
       ) : (
         <div className="flex flex-col gap-4">
-          {bookings.map((booking, i) => (
+          {sortedBookings.map((booking, i) => (
             <motion.div
               key={booking._id}
               initial={{ opacity: 0, y: 20 }}
@@ -124,7 +155,7 @@ const MyBookings = () => {
               <img
                 src={booking.serviceImage || "https://placehold.co/100x100"}
                 alt={booking.serviceName}
-                className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0"/>
+                className="w-full sm:w-24 h-24 rounded-xl object-cover flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                   <h3 className="font-heading font-semibold text-base text-base-content">
@@ -151,11 +182,11 @@ const MyBookings = () => {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="font-heading font-bold flex items-center text-lg text-primary">
-                      <TbCurrencyTaka size={20}/>{booking.serviceCost.toLocaleString()}
+                      <TbCurrencyTaka size={20} />{booking.serviceCost.toLocaleString()}
                     </span>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-body font-medium ${booking.paymentStatus === "paid"
-                        ? "bg-green-500/10 text-green-500"
-                        : "bg-yellow-500/10 text-yellow-500"
+                      ? "bg-green-500/10 text-green-500"
+                      : "bg-yellow-500/10 text-yellow-500"
                       }`}>
                       {booking.paymentStatus === "paid" ? " Paid" : "Unpaid"}
                     </span>
