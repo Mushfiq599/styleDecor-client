@@ -3,6 +3,7 @@ import { useInView } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
 import { HiStar } from "react-icons/hi2"
 import axios from "axios"
+import { API_URL } from "../../../utils/apiUrl"
 
 const dummyDecorators = [
   {
@@ -45,7 +46,7 @@ const TopDecoratorsSection = () => {
   const [decorators, setDecorators] = useState([])
 
   useEffect(() => {
-    axios.get("https://styledecor-server-jm4k.onrender.com/users/decorators")
+    axios.get(`${API_URL}/users/decorators`)
       .then(res => {
         const realDecorators = res.data.map(d => ({
           _id: d._id,

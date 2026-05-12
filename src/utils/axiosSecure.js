@@ -1,7 +1,8 @@
 import axios from "axios"
+import { API_URL } from "./apiUrl"
 
 const axiosSecure = axios.create({
-    baseURL: "https://styledecor-server-jm4k.onrender.com",
+    baseURL: API_URL,
 })
 
 axiosSecure.interceptors.request.use(

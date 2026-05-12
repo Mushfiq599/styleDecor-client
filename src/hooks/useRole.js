@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import axios from "axios";
+import { API_URL } from "../utils/apiUrl";
 
 const useRole = () => {
     const { user, loading } = useAuth();
@@ -12,7 +13,7 @@ const useRole = () => {
             if (user?.email) {
                 try {
                     const res = await axios.get(
-                        `https://styledecor-server-jm4k.onrender.com/users/role/${user.email}`
+                        `${API_URL}/users/role/${user.email}`
                     );
                     setRole(res.data.role);
                 } catch (err) {

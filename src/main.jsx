@@ -5,6 +5,9 @@ import App from "./App.jsx"
 import AuthProvider from "./context/AuthContext.jsx"
 import { ThemeProvider } from "./context/ThemeContext.jsx"
 import { Toaster } from "react-hot-toast"
+import { wakeServer } from "./utils/apiUrl.js"
+
+wakeServer()
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

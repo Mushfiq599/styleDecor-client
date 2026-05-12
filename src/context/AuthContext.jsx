@@ -10,6 +10,7 @@ import {
 } from "firebase/auth"
 import { auth } from "../firebase.config"
 import axios from "axios"
+import { API_URL } from "../utils/apiUrl"
 
 export const AuthContext = createContext(null)
 const googleProvider = new GoogleAuthProvider()
@@ -51,7 +52,7 @@ const AuthProvider = ({ children }) => {
 
             if (currentUser?.email) {
                 try {
-                    const res = await axios.post("https://styledecor-server-jm4k.onrender.com/auth/jwt", {
+                    const res = await axios.post(`${API_URL}/auth/jwt`, {
                         email: currentUser.email,
                     })
                     localStorage.setItem("styleDecor-token", res.data.token)

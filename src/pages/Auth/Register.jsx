@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
 import useAuth from "../../hooks/useAuth"
 import axios from "axios"
+import { API_URL } from "../../utils/apiUrl"
 import toast from "react-hot-toast"
 import { FcGoogle } from "react-icons/fc"
 import { HiEye, HiEyeOff, HiArrowRight } from "react-icons/hi"
@@ -27,7 +28,7 @@ const Register = () => {
   }
 
   const saveUserToDB = async (email, name, photo) => {
-    await axios.post("https://styledecor-server-jm4k.onrender.com/users", { email, name, photo })
+    await axios.post(`${API_URL}/users`, { email, name, photo })
   }
 
   const handleRegister = async (e) => {

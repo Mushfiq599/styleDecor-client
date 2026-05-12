@@ -5,6 +5,7 @@ import { TbCurrencyTaka } from "react-icons/tb";
 import { Link } from "react-router-dom"
 import { HiArrowRight } from "react-icons/hi"
 import axios from "axios"
+import { API_URL } from "../../../utils/apiUrl"
 
 const categoryColors = {
     home: "bg-primary/10 text-primary",
@@ -21,7 +22,7 @@ const ServicesSection = () => {
     const [services, setServices] = useState([])
 
     useEffect(() => {
-        axios.get("https://styledecor-server-jm4k.onrender.com/services")
+        axios.get(`${API_URL}/services`)
             .then(res => setServices(res.data.slice(0, 6)))
             .catch(err => console.error(err))
     }, [])

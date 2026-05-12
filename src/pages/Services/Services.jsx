@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import { API_URL } from "../../utils/apiUrl"
 import { HiSearch, HiFilter, HiArrowRight } from "react-icons/hi"
 import { TbCurrencyTaka } from "react-icons/tb";
 
@@ -32,7 +33,7 @@ const Services = () => {
       if (minCost) params.minCost = minCost
       if (maxCost) params.maxCost = maxCost
 
-      const res = await axios.get("https://styledecor-server-jm4k.onrender.com/services", { params })
+      const res = await axios.get(`${API_URL}/services`, { params })
       setServices(res.data)
     } catch (error) {
       console.error("Failed to fetch services")

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
 import useAxiosSecure from "../../hooks/useAxiosSecure"
+import { API_URL } from "../../utils/apiUrl"
 import toast from "react-hot-toast"
 import useAuth from "../../hooks/useAuth"
 import { HiLocationMarker, HiCalendar, HiX, HiArrowRight } from "react-icons/hi"
@@ -38,7 +39,7 @@ const ServiceDetails = () => {
     const fetchService = async () => {
       try {
         const res = await axios.get(
-          `https://styledecor-server-jm4k.onrender.com/services/${id}`
+          `${API_URL}/services/${id}`
         )
         setService(res.data)
       } catch (error) {
