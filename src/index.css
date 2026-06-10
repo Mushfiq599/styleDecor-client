@@ -2,14 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Inter", sans-serif;
-}
+/* ── Fonts ─────────────────────────────────────────────────── */
+body { font-family: "Inter", sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: "Playfair Display", serif; }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", serif;
-}
-
+/* ── Glass card ─────────────────────────────────────────────── */
 .glass-card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
@@ -29,21 +26,15 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 8px 32px rgba(13, 148, 136, 0.08);
 }
 
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
+/* ── Global transitions ─────────────────────────────────────── */
+* { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #0D9488;
-  border-radius: 10px;
-}
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #0D9488; border-radius: 10px; }
 
+/* ── Swiper hero pagination ─────────────────────────────────── */
 .hero-swiper .swiper-pagination {
   bottom: 2rem !important;
   right: 2rem !important;
@@ -52,7 +43,6 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   gap: 6px;
 }
-
 .hero-swiper .swiper-pagination-bullet {
   width: 8px;
   height: 8px;
@@ -61,8 +51,38 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 999px;
   transition: all 0.3s ease;
 }
-
 .hero-swiper .swiper-pagination-bullet-active {
   width: 24px;
   background: #0D9488;
+}
+
+/* ── Skeleton shimmer ───────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--b3)) 25%,
+    hsl(var(--b2)) 50%,
+    hsl(var(--b3)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Section label helper ───────────────────────────────────── */
+.section-label {
+  @apply inline-block font-body text-xs font-medium tracking-widest uppercase mb-4 px-3 py-1 rounded-full;
+}
+
+/* ── Focus ring (accessibility) ─────────────────────────────── */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid #0D9488;
+  outline-offset: 2px;
 }
