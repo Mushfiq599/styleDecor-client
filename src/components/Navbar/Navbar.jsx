@@ -11,7 +11,7 @@ import { useTheme } from "../../context/ThemeContext"
 
 const navLinks = [
   { to: "/",        label: "Home"     },
-  { to: "/services",label: "Services" },
+  { to: "/services",label: "Explore" },
   { to: "/about",   label: "About"    },
   { to: "/blog",    label: "Blog"     },
   { to: "/contact", label: "Contact"  },
@@ -72,9 +72,7 @@ const Navbar = () => {
 
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-sm">S</span>
-            </div>
+            <img src="/logo.png" alt="StyleDecor Logo" className="w-8 h-8" />
             <span className="font-heading font-bold text-lg text-base-content">
               Style<span className="text-primary">Decor</span>
             </span>

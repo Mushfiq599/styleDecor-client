@@ -23,7 +23,7 @@ const ServicesSection = () => {
 
     useEffect(() => {
         axios.get(`${API_URL}/services`)
-            .then(res => setServices(res.data.slice(0, 6)))
+            .then(res => setServices(res.data.slice(0, 8)))
             .catch(err => console.error(err))
     }, [])
 
@@ -46,7 +46,7 @@ const ServicesSection = () => {
                         From homes to grand ceremonies — we cover every space with creativity and expertise.
                     </p>
                 </motion.div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                     {services.map((service, i) => (
                         <motion.div
                             key={service._id}

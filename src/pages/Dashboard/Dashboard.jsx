@@ -9,14 +9,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex bg-base-200">
       <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}/>
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)} />
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
           className="fixed inset-0 bg-black/50 z-20 lg:hidden"/>
       )}
-      <div className="flex-1 flex flex-col min-h-screen lg:ml-64">
+      <div className="flex-1 flex flex-col min-h-screen">
         <DashboardNavbar setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6">
           <Outlet />

@@ -151,13 +151,15 @@ const Contact = () => {
               <h3 className="font-heading font-semibold text-base text-base-content mb-3">Follow Us</h3>
               <div className="flex items-center gap-3">
                 {[
-                  { icon: <FaFacebook size={16} />, href: "#",  label: "Facebook" },
-                  { icon: <FaInstagram size={16} />, href: "#", label: "Instagram" },
-                  { icon: <FaXTwitter size={16} />, href: "#",  label: "Twitter" },
+                  { icon: <FaFacebook size={16} />, href: "https://www.facebook.com/", label: "Facebook" },
+                  { icon: <FaInstagram size={16} />, href: "https://www.instagram.com/", label: "Instagram" },
+                  { icon: <FaXTwitter size={16} />, href: "https://www.twitter.com/", label: "Twitter" },
                 ].map(({ icon, href, label }) => (
                   <a
                     key={label}
                     href={href}
+                    target="_blank"
+                    rel="noreferrer"
                     aria-label={label}
                     className="w-10 h-10 rounded-xl bg-base-200 text-base-content/60 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200"
                   >

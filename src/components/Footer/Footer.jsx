@@ -16,9 +16,7 @@ const Footer = () => {
           {/* ── Brand ── */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-                <span className="text-white font-heading font-bold">S</span>
-              </div>
+              <img src="/logo.png" alt="StyleDecor Logo" className="w-9 h-9" />
               <span className="font-heading font-bold text-xl text-base-content">
                 Style<span className="text-primary">Decor</span>
               </span>
@@ -28,14 +26,16 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-3">
               {[
-                { icon: <FaFacebook size={16} />, href: "#", label: "Facebook" },
-                { icon: <FaInstagram size={16} />, href: "#", label: "Instagram" },
-                { icon: <FaXTwitter size={16} />, href: "#", label: "Twitter" },
-                { icon: <FaYoutube size={16} />, href: "#", label: "YouTube" },
+                { icon: <FaFacebook size={16} />, href: "https://www.facebook.com/", label: "Facebook" },
+                { icon: <FaInstagram size={16} />, href: "https://www.instagram.com/", label: "Instagram" },
+                { icon: <FaXTwitter size={16} />, href: "https://www.twitter.com/", label: "Twitter" },
+                { icon: <FaYoutube size={16} />, href: "https://www.youtube.com/", label: "YouTube" },
               ].map(({ icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noreferrer"
                   aria-label={label}
                   className="w-9 h-9 rounded-xl bg-base-300 text-base-content/60 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200"
                 >

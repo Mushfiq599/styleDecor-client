@@ -7,7 +7,18 @@ import { HiChevronUpDown } from "react-icons/hi2"
 import ServiceCard, { ServiceCardSkeleton } from "../../components/ui/ServiceCard"
 import Pagination from "../../components/ui/Pagination"
 
-const categories = ["all", "home", "wedding", "office", "seminar", "meeting", "birthday"]
+// ✅ FIXED: added "festival" and "exhibition" to match seed.js categories
+const categories = [
+  "all",
+  "home",
+  "wedding",
+  "office",
+  "seminar",
+  "meeting",
+  "birthday",
+  "festival",
+  "exhibition",
+]
 
 const sortOptions = [
   { value: "newest",     label: "Newest First" },
@@ -17,26 +28,26 @@ const sortOptions = [
   { value: "name-asc",   label: "Name: A–Z" },
 ]
 
-const ITEMS_PER_PAGE = 8
+const ITEMS_PER_PAGE = 12
 
 const Services = () => {
-  const [services, setServices]   = useState([])
-  const [loading, setLoading]     = useState(true)
-  const [search, setSearch]       = useState("")
-  const [category, setCategory]   = useState("all")
-  const [minCost, setMinCost]     = useState("")
-  const [maxCost, setMaxCost]     = useState("")
-  const [sortBy, setSortBy]       = useState("newest")
+  const [services, setServices]       = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [search, setSearch]           = useState("")
+  const [category, setCategory]       = useState("all")
+  const [minCost, setMinCost]         = useState("")
+  const [maxCost, setMaxCost]         = useState("")
+  const [sortBy, setSortBy]           = useState("newest")
   const [currentPage, setCurrentPage] = useState(1)
 
   const fetchServices = async () => {
     setLoading(true)
     try {
       const params = {}
-      if (search)              params.search   = search
-      if (category !== "all")  params.category = category
-      if (minCost)             params.minCost  = minCost
-      if (maxCost)             params.maxCost  = maxCost
+      if (search)             params.search   = search
+      if (category !== "all") params.category = category
+      if (minCost)            params.minCost  = minCost
+      if (maxCost)            params.maxCost  = maxCost
       const res = await axios.get(`${API_URL}/services`, { params })
       setServices(res.data)
       setCurrentPage(1)
