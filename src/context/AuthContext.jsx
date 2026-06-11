@@ -48,24 +48,30 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            // Set user and stop loading IMMEDIATELY — don't wait for the JWT fetch.
+            // Previously the fetch was awaited before setUser/setLoading, so a slow
+            // or sleeping Render backend caused PrivateRoute to see user=null and
+            // redirect to /login even though Firebase had confirmed authentication.
+            setUser(currentUser)
+            setLoading(false)
+
             if (currentUser?.email) {
-                try {
-                    const res = await axios.post(`${API_URL}/auth/jwt`, {
-                        email: currentUser.email,
+                // Fetch JWT in the background — non-blocking
+                axios.post(`${API_URL}/auth/jwt`, { email: currentUser.email })
+                    .then((res) => {
+                        localStorage.setItem("styleDecor-token", res.data.token)
                     })
-                    localStorage.setItem("styleDecor-token", res.data.token)
-                } catch {
-                    localStorage.removeItem("styleDecor-token")
-                }
+                    .catch(() => {
+                        // Only remove token if there isn't already a valid one stored.
+                        // A slow/sleeping Render server should not log the user out.
+                        if (!localStorage.getItem("styleDecor-token")) {
+                            localStorage.removeItem("styleDecor-token")
+                        }
+                    })
             } else {
                 localStorage.removeItem("styleDecor-token")
             }
-
-            // Set user and stop loading regardless — the JWT is best-effort.
-            // axiosSecure will catch 401/403 for protected routes if it's missing.
-            setUser(currentUser)
-            setLoading(false)
         })
 
         return () => unsubscribe()
