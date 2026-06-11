@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCheck, HiX, HiSearch } from "react-icons/hi"
 
 const ManageDecorators = () => {
   const axiosSecure = useAxiosSecure()
+  const { tokenReady } = useAuth()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -23,8 +25,9 @@ const ManageDecorators = () => {
   }
 
   useEffect(() => {
+    if (!tokenReady) return
     fetchUsers()
-  }, [])
+  }, [tokenReady])
 
   const handleRoleChange = async (email, newRole) => {
     const action = newRole === "decorator" ? "Make Decorator" : "Remove Decorator"

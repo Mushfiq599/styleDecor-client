@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiSearch } from "react-icons/hi"
@@ -13,6 +14,7 @@ const ITEMS_PER_PAGE = 10
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure()
+  const { tokenReady } = useAuth()
   const [users, setUsers]           = useState([])
   const [loading, setLoading]       = useState(true)
   const [search, setSearch]         = useState("")
@@ -31,7 +33,10 @@ const ManageUsers = () => {
     }
   }
 
-  useEffect(() => { fetchUsers() }, [])
+  useEffect(() => {
+    if (!tokenReady) return
+    fetchUsers()
+  }, [tokenReady])
 
   const handleRoleChange = async (email, newRole) => {
     const result = await Swal.fire({
