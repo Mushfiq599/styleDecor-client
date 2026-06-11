@@ -110,6 +110,14 @@ VITE_API_URL=
 - **Email:** vtimely46@gmail.com
 - **Password:** victor@555
 
+## 🎭 Demo Credentials
+
+| Role  | Email                    | Password   |
+|-------|--------------------------|------------|
+| User  | user@styledecor.com      | User@123   |
+| Admin | admin@styledecor.com     | Admin@123  |
+
+
 ### Decorator
 - View assigned projects
 - Today's schedule
