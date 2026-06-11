@@ -131,8 +131,11 @@ const Sidebar = ({ isOpen, onClose }) => {
             <p className="font-body font-semibold text-sm text-base-content truncate">
               {user?.displayName || "User"}
             </p>
+            {/* FIX: show a neutral badge while role is still loading (null),
+                instead of displaying "user" which was misleading for
+                admin and decorator accounts. */}
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-body font-medium capitalize">
-              {role || "user"}
+              {role ?? "…"}
             </span>
           </div>
         </div>

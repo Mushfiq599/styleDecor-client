@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -14,9 +14,11 @@ import { API_URL } from "../utils/apiUrl"
 
 export const AuthContext = createContext(null)
 const googleProvider = new GoogleAuthProvider()
+
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser]       = useState(null)
     const [loading, setLoading] = useState(true)
+
     const register = (email, password) => {
         setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
@@ -47,21 +49,23 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            setUser(currentUser)
-            setLoading(false)
-
             if (currentUser?.email) {
                 try {
                     const res = await axios.post(`${API_URL}/auth/jwt`, {
                         email: currentUser.email,
                     })
                     localStorage.setItem("styleDecor-token", res.data.token)
-                } catch (error) {
-                    console.error("Failed to get JWT token:", error)
+                } catch {
+                    localStorage.removeItem("styleDecor-token")
                 }
             } else {
                 localStorage.removeItem("styleDecor-token")
             }
+
+            // Set user and stop loading regardless — the JWT is best-effort.
+            // axiosSecure will catch 401/403 for protected routes if it's missing.
+            setUser(currentUser)
+            setLoading(false)
         })
 
         return () => unsubscribe()
