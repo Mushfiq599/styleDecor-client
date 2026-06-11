@@ -102,7 +102,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       <div className="flex items-center justify-between p-5 border-b border-base-300">
         <NavLink to="/" className="flex items-center gap-2" onClick={close}>
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-white font-heading font-bold text-sm">S</span>
+            <img src="/logo.png" alt="StyleDecor Logo" className="w-8 h-8" />
           </div>
           <span className="font-heading font-bold text-lg text-base-content">
             Style<span className="text-primary">Decor</span>
