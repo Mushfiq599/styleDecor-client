@@ -86,6 +86,11 @@ const DashboardOverview = () => {
     load()
   }, [role, user])
 
+  // If there's no role and roleLoading finished, stop the loading spinner
+  useEffect(() => {
+    if (!role && !roleLoading) setLoading(false)
+  }, [role, roleLoading])
+
   if (loading || roleLoading) {
     return (
       <div className="flex justify-center items-center h-64">

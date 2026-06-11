@@ -60,13 +60,8 @@ const Navbar = () => {
     `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || "User")}&background=0D9488&color=fff&size=100`
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-base-100/90 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-base-300/50"
-          : "bg-transparent"
-      }`}
-    >
+    <header className={`sticky top-0 left-0 right-0 z-50 bg-base-100/95 backdrop-blur-md border-b border-base-300 transition-all duration-300`}>
+    
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16">
 

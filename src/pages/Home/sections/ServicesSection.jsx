@@ -47,49 +47,52 @@ const ServicesSection = () => {
                     </p>
                 </motion.div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                    {services.map((service, i) => (
-                        <motion.div
-                            key={service._id}
-                            initial={{ opacity: 0, y: 40 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-                            <Link
-                                to={`/services/${service._id}`}
-                                className="group block glass-card overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500">
-                                <div className="relative h-52 overflow-hidden">
-                                    <img
-                                        src={service.image}
-                                        alt={service.service_name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
-                                    <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-body font-medium capitalize ${categoryColors[service.service_category] || "bg-primary/10 text-primary"}`}>
-                                        {service.service_category}
-                                    </span>
-                                </div>
-                                <div className="p-5">
-                                    <h3 className="font-heading font-semibold text-lg text-base-content mb-2 group-hover:text-primary transition-colors duration-300">
-                                        {service.service_name}
-                                    </h3>
-                                    <p className="font-body text-sm text-base-content/60 mb-4 line-clamp-2">
-                                        {service.description}
-                                    </p>
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <span className="font-heading font-bold text-xl text-primary flex items-center gap-1">
-                                                <TbCurrencyTaka   size={24}/>{service.cost.toLocaleString()}
-                                            </span>
-                                            <span className="font-body text-xs text-base-content/50 ml-1">
-                                                {service.unit}
-                                            </span>
-                                        </div>
-                                        <span className="flex items-center gap-1 text-xs font-body font-medium text-primary group-hover:gap-2 transition-all duration-300">
-                                            View Details
-                                            <HiArrowRight size={14} />
+                        {services.map((service, i) => (
+                            <motion.div
+                                key={service._id}
+                                initial={{ opacity: 0, y: 40 }}
+                                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                                transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                className="h-full">
+                                <Link
+                                    to={`/services/${service._id}`}
+                                    className="group block glass-card overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 h-full flex flex-col">
+                                    <div className="relative h-52 overflow-hidden">
+                                        <img
+                                            src={service.image}
+                                            alt={service.service_name}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+                                        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-body font-medium capitalize ${categoryColors[service.service_category] || "bg-primary/10 text-primary"}`}>
+                                            {service.service_category}
                                         </span>
                                     </div>
-                                </div>
-                            </Link>
-                        </motion.div>
-                    ))}
+                                    <div className="p-5 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <h3 className="font-heading font-semibold text-lg text-base-content mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                                                {service.service_name}
+                                            </h3>
+                                            <p className="font-body text-sm text-base-content/60 mb-4 line-clamp-2">
+                                                {service.description}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-2">
+                                            <div>
+                                                <span className="font-heading font-bold text-xl text-primary flex items-center gap-1">
+                                                    <TbCurrencyTaka   size={24}/>{service.cost.toLocaleString()}
+                                                </span>
+                                                <span className="font-body text-xs text-base-content/50 ml-1">
+                                                    {service.unit}
+                                                </span>
+                                            </div>
+                                            <span className="flex items-center gap-1 text-xs font-body font-medium text-primary group-hover:gap-2 transition-all duration-300">
+                                                View Details
+                                                <HiArrowRight size={14} />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
                 </div>
                 <motion.div
                     initial={{ opacity: 0 }}

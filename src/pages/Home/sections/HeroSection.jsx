@@ -53,7 +53,7 @@ const fadeUp = {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Swiper
           modules={[Autoplay, EffectFade, Pagination]}
@@ -62,21 +62,21 @@ const HeroSection = () => {
           pagination={{ clickable: true }}
           loop={true}
           className="w-full h-full hero-swiper"
-          style={{ height: "100vh" }}>
+          style={{ height: "70vh" }}>
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div className="relative w-full h-full">
+                <div className="relative w-full h-full">
                 <img
                   src={slide.image}
                   alt={slide.title}
                   className="w-full h-full object-cover"/>
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/60" />
 
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="absolute bottom-24 left-8 lg:left-16 z-10">
+                  className="absolute bottom-24 left-8 lg:left-16 z-10 hidden md:block">
                   <p className="font-body text-xs text-white/60 tracking-widest uppercase mb-1">
                     Featured Project
                   </p>
@@ -113,25 +113,26 @@ const HeroSection = () => {
         className="absolute top-48 left-[20%] z-20 w-12 h-12 rounded-xl bg-white/10 border border-white/20 backdrop-blur-sm hidden lg:flex items-center justify-center">
         <span className="text-lg"><FcHome size={26}/></span>
       </motion.div>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm mb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center sm:justify-center pt-28 sm:pt-20">
+        <div>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={0}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm mb-6">
           <HiSparkles className="text-primary" size={16} />
           <span className="font-body text-xs font-medium text-white tracking-wider uppercase">
             Premium Decoration Services
           </span>
           <HiSparkles className="text-primary" size={16} />
         </motion.div>
-        <motion.h1
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={1}
-          className="font-heading text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.1] mb-6">
+          <motion.h1
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={1}
+            className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.05] mb-4">
           Transform Your
           <br />
           <span className="relative inline-block">
@@ -142,41 +143,46 @@ const HeroSection = () => {
           Something{" "}
           <span className="text-secondary">Magical</span>
         </motion.h1>
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={2}
-          className="font-body text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={2}
+            className="font-body text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-6 leading-relaxed">
           From intimate home makeovers to grand ceremony setups — our expert decorators
           bring your vision to life with precision, creativity, and passion.
         </motion.p>
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={3}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-          <Link
-            to="/services"
-            className="group flex items-center gap-3 px-8 py-4 bg-primary text-white font-body font-semibold rounded-2xl hover:bg-primary/90 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300">
-            Book Decoration Service
-            <HiArrowRight
-              size={18}
-              className="group-hover:translate-x-1 transition-transform duration-300"/>
-          </Link>
-          <Link
-            to="/services"
-            className="flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-body font-semibold rounded-2xl border border-white/20 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300">
-            Explore Services
-          </Link>
-        </motion.div>
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={4}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6">
+        </div>
+        </div>
+
+        <div className="mt-4">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={3}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <Link
+              to="/services"
+              className="group flex w-full sm:w-auto items-center justify-center gap-3 px-8 py-4 bg-primary text-white font-body font-semibold rounded-2xl hover:bg-primary/90 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300">
+              Book Decoration Service
+              <HiArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform duration-300"/>
+            </Link>
+            <Link
+              to="/services"
+              className="flex w-full sm:w-auto items-center justify-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-body font-semibold rounded-2xl border border-white/20 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300">
+              Explore Services
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={4}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-3">
               {[
