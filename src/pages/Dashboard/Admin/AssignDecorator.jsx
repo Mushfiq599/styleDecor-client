@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import { HiCheck } from "react-icons/hi"
@@ -12,6 +13,7 @@ import { GrUserWorker } from "react-icons/gr";
 
 const AssignDecorator = () => {
   const axiosSecure = useAxiosSecure()
+  const { tokenReady } = useAuth()
   const [bookings, setBookings] = useState([])
   const [decorators, setDecorators] = useState([])
   const [loading, setLoading] = useState(true)
@@ -42,8 +44,9 @@ const AssignDecorator = () => {
   }
 
   useEffect(() => {
+    if (!tokenReady) return
     fetchData()
-  }, [])
+  }, [tokenReady])
 
   const handleAssign = async (bookingId) => {
     const decoratorEmail = selectedDecorator[bookingId]
@@ -102,11 +105,7 @@ const AssignDecorator = () => {
         </p>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <span className="loading loading-spinner loading-lg text-primary" />
-        </div>
-      ) : bookings.length === 0 ? (
+      {bookings.length === 0 ? (
         <div className="text-center py-20">
           <span className="text-5xl flex justify-center mb-3"><FaCircleCheck color="#008000" /></span>
           <h3 className="font-heading text-xl font-semibold text-base-content mb-2">
