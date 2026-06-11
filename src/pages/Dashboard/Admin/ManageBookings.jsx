@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import useAuth from "../../../hooks/useAuth"
 import toast from "react-hot-toast"
 import { HiCalendar, HiLocationMarker, HiSearch, HiFilter } from "react-icons/hi"
 import { HiChevronUpDown } from "react-icons/hi2"
@@ -29,6 +30,7 @@ const ITEMS_PER_PAGE = 10
 
 const ManageBookings = () => {
   const axiosSecure = useAxiosSecure()
+  const { tokenReady } = useAuth()
   const [bookings, setBookings]       = useState([])
   const [loading, setLoading]         = useState(true)
   const [search, setSearch]           = useState("")
@@ -47,7 +49,7 @@ const ManageBookings = () => {
     }
   }
 
-  useEffect(() => { fetchBookings() }, [])
+  useEffect(() => { if (!tokenReady) return; fetchBookings() }, [tokenReady])
 
   const filtered = bookings
     .filter((b) => {

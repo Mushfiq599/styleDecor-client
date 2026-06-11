@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import useAxiosSecure from "../../../hooks/useAxiosSecure"
+import useAuth from "../../../hooks/useAuth"
 import { TbBrandCashapp, TbCurrencyTaka } from "react-icons/tb"
 import { BsHourglassSplit } from "react-icons/bs"
 import { CgNotes } from "react-icons/cg"
@@ -16,11 +17,13 @@ const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov
 
 const Analytics = () => {
   const axiosSecure = useAxiosSecure()
+  const { tokenReady } = useAuth()
   const [bookings, setBookings] = useState([])
   const [services, setServices] = useState([])
   const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
+    if (!tokenReady) return
     const fetchData = async () => {
       try {
         const [b, s] = await Promise.all([
@@ -33,7 +36,7 @@ const Analytics = () => {
       finally { setLoading(false) }
     }
     fetchData()
-  }, [])
+  }, [tokenReady])
 
   /* ── Derived data ── */
   const serviceDemandData = services

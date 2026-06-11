@@ -20,7 +20,7 @@ const emptyForm = {
 const ITEMS_PER_PAGE = 10
 
 const ManageServices = () => {
-  const { user }      = useAuth()
+  const { user, tokenReady } = useAuth()
   const axiosSecure   = useAxiosSecure()
   const [services, setServices]       = useState([])
   const [loading, setLoading]         = useState(true)
@@ -42,7 +42,7 @@ const ManageServices = () => {
     }
   }
 
-  useEffect(() => { fetchServices() }, [])
+  useEffect(() => { if (!tokenReady) return; fetchServices() }, [tokenReady])
 
   const openAdd = () => {
     setEditingService(null)
