@@ -16,8 +16,9 @@ export const AuthContext = createContext(null)
 const googleProvider = new GoogleAuthProvider()
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser]       = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [user, setUser]           = useState(null)
+    const [loading, setLoading]     = useState(true)
+    const [tokenReady, setTokenReady] = useState(false)
 
     const register = (email, password) => {
         setLoading(true)
@@ -48,30 +49,28 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            // Set user and stop loading IMMEDIATELY — don't wait for the JWT fetch.
-            // Previously the fetch was awaited before setUser/setLoading, so a slow
-            // or sleeping Render backend caused PrivateRoute to see user=null and
-            // redirect to /login even though Firebase had confirmed authentication.
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            // Set user + stop loading IMMEDIATELY so PrivateRoute doesn't redirect
             setUser(currentUser)
             setLoading(false)
 
             if (currentUser?.email) {
-                // Fetch JWT in the background — non-blocking
-                axios.post(`${API_URL}/auth/jwt`, { email: currentUser.email })
-                    .then((res) => {
-                        localStorage.setItem("styleDecor-token", res.data.token)
+                try {
+                    const res = await axios.post(`${API_URL}/auth/jwt`, {
+                        email: currentUser.email,
                     })
-                    .catch(() => {
-                        // Only remove token if there isn't already a valid one stored.
-                        // A slow/sleeping Render server should not log the user out.
-                        if (!localStorage.getItem("styleDecor-token")) {
-                            localStorage.removeItem("styleDecor-token")
-                        }
-                    })
+                    localStorage.setItem("styleDecor-token", res.data.token)
+                } catch {
+                    localStorage.removeItem("styleDecor-token")
+                }
             } else {
                 localStorage.removeItem("styleDecor-token")
             }
+
+            // Signal that the JWT fetch attempt is complete (success or failure).
+            // useRole waits for this before calling /users/role/:email so it
+            // always has a token in localStorage when it makes the request.
+            setTokenReady(true)
         })
 
         return () => unsubscribe()
@@ -80,6 +79,7 @@ const AuthProvider = ({ children }) => {
     const authInfo = {
         user,
         loading,
+        tokenReady,
         register,
         login,
         googleLogin,

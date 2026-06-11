@@ -3,13 +3,15 @@ import useAuth from "./useAuth"
 import axiosSecure from "../utils/axiosSecure"
 
 const useRole = () => {
-    const { user, loading } = useAuth()
+    const { user, loading, tokenReady } = useAuth()
     const [role, setRole]               = useState(null)
     const [roleLoading, setRoleLoading] = useState(true)
 
     useEffect(() => {
-        // Don't fetch until Firebase + JWT are both ready
-        if (loading) return
+        // Wait until Firebase auth AND the JWT fetch are both complete.
+        // Without tokenReady, the role request fires before the token is saved
+        // to localStorage, gets a 401, and role stays null — locking admins out.
+        if (loading || !tokenReady) return
 
         if (!user?.email) {
             setRole(null)
@@ -22,9 +24,6 @@ const useRole = () => {
                 const res = await axiosSecure.get(`/users/role/${user.email}`)
                 setRole(res.data.role)
             } catch {
-                // FIX: Don't fake a "user" role on failure.
-                // Returning null lets AdminRoute/DecoratorRoute redirect
-                // correctly instead of silently showing the wrong panel.
                 setRole(null)
             } finally {
                 setRoleLoading(false)
@@ -32,7 +31,7 @@ const useRole = () => {
         }
 
         fetchRole()
-    }, [user, loading])
+    }, [user, loading, tokenReady])
 
     return [role, roleLoading]
 }
