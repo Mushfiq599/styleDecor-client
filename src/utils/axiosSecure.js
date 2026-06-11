@@ -19,20 +19,10 @@ axiosSecure.interceptors.request.use(
 axiosSecure.interceptors.response.use(
     (response) => response,
     (error) => {
-        const status = error.response?.status
-        if (status === 401 || status === 403) {
-            const hadToken = !!localStorage.getItem("styleDecor-token")
-            localStorage.removeItem("styleDecor-token")
-
-            // FIX: only force-redirect when there was actually a token present
-            // (i.e. it expired / was invalid) AND we are on a dashboard route.
-            // Without the `hadToken` guard, a startup race where the token
-            // isn't saved yet could trigger a redirect loop on page load.
-            const onDashboard = window.location.pathname.startsWith("/dashboard")
-            if (hadToken && onDashboard) {
-                window.location.href = "/login"
-            }
-        }
+        // Do NOT auto-redirect to /login on 401/403.
+        // The Render free-tier server sleeps and returns 401/503 on wake-up,
+        // which was kicking the admin out every time. Route guards (PrivateRoute,
+        // AdminRoute) handle access control — just pass the error through.
         return Promise.reject(error)
     }
 )
