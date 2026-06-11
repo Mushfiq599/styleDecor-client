@@ -64,7 +64,9 @@ const Login = () => {
     if (!validate()) return
     setLoading(true)
     try {
-      await login(formData.email, formData.password)
+      const result = await login(formData.email, formData.password)
+      const { displayName, photoURL } = result.user
+      try { await saveUserToDB(formData.email, displayName, photoURL) } catch { /* silent */ }
       toast.success("Welcome back!")
       navigate(from, { replace: true })
     } catch (error) {
