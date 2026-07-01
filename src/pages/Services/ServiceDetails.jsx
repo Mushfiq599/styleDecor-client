@@ -66,20 +66,13 @@ const ServiceDetails = () => {
     load()
   }, [id])
 
-  // Gallery: 4 crop variants of the same Unsplash image
+  // Gallery: 4 distinct images stored per service.
+  // Falls back to repeating the single cover image for any older
+  // services that were never given an `images` array.
   const gallery = service
-    ? [
-        service.image,
-        service.image.includes("unsplash.com")
-          ? service.image.replace(/&?w=\d+/, "&w=800").replace(/&?q=\d+/, "&q=75") + "&crop=entropy"
-          : service.image,
-        service.image.includes("unsplash.com")
-          ? service.image.replace(/&?w=\d+/, "&w=800") + "&crop=faces"
-          : service.image,
-        service.image.includes("unsplash.com")
-          ? service.image.replace(/&?w=\d+/, "&w=800") + "&crop=focalpoint"
-          : service.image,
-      ]
+    ? service.images && service.images.length > 0
+      ? service.images
+      : [service.image, service.image, service.image, service.image]
     : []
 
   const validate = () => {

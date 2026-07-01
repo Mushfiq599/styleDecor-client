@@ -40,6 +40,7 @@ StyleDecor is a modern appointment management system for a local decoration comp
 
 🌐 [https://style-decor-client-five.vercel.app](https://style-decor-client-five.vercel.app)
 
+
 ## Key Features
 
 - Browse decoration services with search, category filter, and budget range filter

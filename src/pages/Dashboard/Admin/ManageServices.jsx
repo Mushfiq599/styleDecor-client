@@ -14,7 +14,8 @@ const categories = ["home","wedding","office","seminar","meeting","birthday"]
 
 const emptyForm = {
   service_name: "", cost: "", unit: "",
-  service_category: "home", description: "", image: "",
+  service_category: "home", description: "",
+  images: ["", "", "", ""],
 }
 
 const ITEMS_PER_PAGE = 10
@@ -53,16 +54,27 @@ const ManageServices = () => {
 
   const openEdit = (service) => {
     setEditingService(service)
+    // Pad/trim to exactly 4 slots so the 4 inputs always have a value to bind to.
+    const existingImages = service.images && service.images.length > 0
+      ? service.images
+      : [service.image || ""]
+    const images = [0, 1, 2, 3].map((i) => existingImages[i] || "")
     setFormData({
       service_name:     service.service_name,
       cost:             service.cost,
       unit:             service.unit,
       service_category: service.service_category,
       description:      service.description,
-      image:            service.image,
+      images,
     })
     setErrors({})
     setModalOpen(true)
+  }
+
+  const handleImageChange = (index, value) => {
+    const images = [...formData.images]
+    images[index] = value
+    setFormData({ ...formData, images })
   }
 
   const validate = () => {
@@ -71,6 +83,7 @@ const ManageServices = () => {
     if (!formData.cost || isNaN(formData.cost) || Number(formData.cost) <= 0) e.cost = "Enter a valid cost"
     if (!formData.unit.trim()) e.unit = "Unit is required"
     if (!formData.description.trim()) e.description = "Description is required"
+    if (!formData.images[0]?.trim()) e.image_0 = "At least the first image is required"
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -80,7 +93,15 @@ const ManageServices = () => {
     if (!validate()) return
     setSaving(true)
     try {
-      const payload = { ...formData, cost: Number(formData.cost), createdByEmail: user.email }
+      // Drop empty slots, keep whichever of the 4 were actually filled in.
+      const images = formData.images.map((s) => s.trim()).filter(Boolean)
+      const payload = {
+        ...formData,
+        images,
+        image: images[0] || "", // cover image shown in cards/lists = first gallery image
+        cost: Number(formData.cost),
+        createdByEmail: user.email,
+      }
       if (editingService) {
         await axiosSecure.put(`/services/${editingService._id}`, payload)
         toast.success("Service updated!")
@@ -268,12 +289,34 @@ const ManageServices = () => {
             </select>
           </div>
 
-          {field("Image URL", "svc-image", {
-            type: "url", name: "image",
-            value: formData.image,
-            onChange: (e) => setFormData({ ...formData, image: e.target.value }),
-            placeholder: "https://example.com/image.jpg",
-          })}
+          <div>
+            <label className="font-body text-sm font-medium text-base-content mb-1.5 block">
+              Gallery Images (4)
+            </label>
+            <div className="flex flex-col gap-2">
+              {formData.images.map((url, i) => (
+                <div key={i}>
+                  <input
+                    id={`svc-image-${i}`}
+                    type="url"
+                    value={url}
+                    onChange={(e) => handleImageChange(i, e.target.value)}
+                    placeholder={
+                      i === 0
+                        ? "https://images.unsplash.com/... (cover image, required)"
+                        : `https://images.unsplash.com/... (image ${i + 1}, optional)`
+                    }
+                    className={`w-full px-4 py-3 rounded-xl bg-base-200 border-2 outline-none font-body text-sm text-base-content placeholder:text-base-content/30 transition-all duration-300 ${
+                      i === 0 && errors.image_0 ? "border-red-500" : "border-transparent focus:border-primary"
+                    }`}
+                  />
+                  {i === 0 && errors.image_0 && (
+                    <p className="font-body text-xs text-red-500 mt-1">{errors.image_0}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div>
             <label htmlFor="svc-desc" className="font-body text-sm font-medium text-base-content mb-1.5 block">Description</label>
